@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "node-sass": "^4.9.2",
+    "save-dev": "^2.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
@@ -49,6 +51,7 @@
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
+    "sass-loader": "^7.0.3",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.1",
