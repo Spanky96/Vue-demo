@@ -1,0 +1,31 @@
+[{
+  "oldPrice": 0,
+  "type": "3",
+  "avatar": "https://fuss10.elemecdn.com/9/c5/7fdfff0ec65844d20422e807e693fjpeg.jpeg?imageMogr2/thumbnail/100x100/format/webp/quality/85",
+  "namespace": "publaw",
+  "info": "早上来一口，健康！",
+  "id": "1pk9suo6qdf2w",
+  "picture": "https://fuss10.elemecdn.com/9/c5/7fdfff0ec65844d20422e807e693fjpeg.jpeg?imageMogr2/thumbnail/100x100/format/webp/quality/85",
+  "price": 5,
+  "ipaddr": "0:0:0:0:0:0:0:1",
+  "py": "PDSRZ",
+  "description": "咸粥",
+  "attach": null,
+  "name": "皮带瘦肉粥",
+  "leftCount": 1000
+}, {
+  "oldPrice": 20,
+  "type": "2",
+  "avatar": "https://fuss10.elemecdn.com/0/8b/c40a8fc1e8bfd2166647240fc56cajpeg.jpeg?imageMogr2/thumbnail/100x100/format/webp/quality/85",
+  "namespace": "publaw",
+  "info": "最受国民喜爱，一整片香酥腿肉，结结实实口口吃到肉",
+  "id": "u63dtbh44rb0",
+  "picture": "https://fuss10.elemecdn.com/0/8b/c40a8fc1e8bfd2166647240fc56cajpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/85",
+  "price": 15,
+  "ipaddr": "0:0:0:0:0:0:0:1",
+  "py": "XLJTB",
+  "description": "汉堡包",
+  "attach": null,
+  "name": "香辣鸡腿堡",
+  "leftCount": 1000
+}]

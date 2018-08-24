@@ -40,7 +40,17 @@ module.exports = {
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
     cacheBusting: true,
 
-    cssSourceMap: true
+    cssSourceMap: true,
+
+    proxyTable: { 
+      '/api': { 
+        target: 'http://localhost:88/', //源地址 
+        changeOrigin: true, //改变源 
+        pathRewrite: { 
+          '^/api': 'http://localhost:88/' //路径重写 
+          } 
+      } 
+    }
   },
 
   build: {
