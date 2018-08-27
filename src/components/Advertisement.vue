@@ -1,5 +1,8 @@
 <template>
-<div id="ads">
+<div id="ads" v-if="open">
+  <div class="count-down">
+    <count-down :number="5" @timeover = "timeover" :auto-close="false"></count-down>
+  </div>
   <slide-wrapper id="ads">
     <slide><img src="/static/images/ad/ad1.png" /></slide>
     <slide><img src="/static/images/ad/ad2.png" /></slide>
@@ -13,13 +16,25 @@
 import Content from './weui/components/content';
 import { SimpleHeader } from './weui/components/header';
 import { SlideWrapper, Slide } from './weui/components/slide';
+import { CountDown } from './weui/components/timer';
 
 export default {
+  data () {
+    return {
+      open: true
+    };
+  },
   components: {
     'page-content': Content,
     SimpleHeader,
     SlideWrapper,
-    Slide
+    Slide,
+    CountDown
+  },
+  methods: {
+    timeover: function () {
+      this.open = false;
+    }
   }
 };
 </script>
@@ -38,6 +53,13 @@ export default {
     .bullets {
       bottom: 1.3rem;
     }
+  }
+  .count-down {
+    position: absolute;
+    z-index: 99999999;
+    right: 0;
+    top: 15px;
+    right: 15px;
   }
 }
 </style>

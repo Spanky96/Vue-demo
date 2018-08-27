@@ -1,23 +1,24 @@
 <template>
 <div>
+  <advertisement></advertisement>
   <page>
   <page-footer>
-    <footer-item v-bind:class="{ 'active' : currentView === 'login' }" @click.native="changeView('login')">
+    <footer-item v-bind:class="{ 'active' : currentView === 'home' }" @click.native="changeView('home')">
       <span class="icon demo-icon-home"></span>
-      <label>Home</label>
+      <label>主页</label>
     </footer-item>
     <footer-item v-bind:class="{ 'active' : currentView === 'slide' }" @click.native="changeView('slide')">
       <span class="icon demo-icon-search"></span>
-      <label>Search</label>
+      <label>预约</label>
     </footer-item>
     <footer-item v-bind:class="{ 'active' : currentView === 'noti' }" @click.native="changeView('noti')">
       <span class="icon demo-icon-noti"></span>
       <span class="badge">2</span>
-      <label>Noti</label>
+      <label>消费记录</label>
     </footer-item>
     <footer-item v-bind:class="{ 'active' : currentView === 'about' }" @click.native="changeView('about')">
       <span class="icon demo-icon-me"></span>
-      <label>About</label>
+      <label>个人</label>
     </footer-item>
   </page-footer>
   <keep-alive>
@@ -31,8 +32,8 @@
 import Content from './weui/components/content';
 import Page from './weui/components/page/index';
 import { Footer, Item } from './weui/components/footer';
-import Login from './Login';
-import Slide from './Slide';
+import Home from './Home';
+import Advertisement from './Advertisement';
 export default {
   name: 'HelloWorld',
   components: {
@@ -40,12 +41,12 @@ export default {
     Page,
     'page-footer': Footer,
     'footer-item': Item,
-    Login,
-    Slide
+    Home,
+    Advertisement
   },
   data () {
     return {
-      currentView: 'home'
+      currentView: 'login'
     };
   },
   methods: {
