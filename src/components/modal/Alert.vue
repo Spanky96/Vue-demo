@@ -54,3 +54,11 @@ export default {
   }
 }
 </script>
+
+<style>
+.overlay .inner {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+</style>
+

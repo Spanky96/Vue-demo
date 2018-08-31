@@ -16,12 +16,15 @@
         </ul>
         <div id="content">
           <scroll :enable-infinite="false" :enable-refresh="false">
-            <keep-alive>
+            <!-- <keep-alive>
               <component :is="currentView" :page="pages[currentId -1]"></component>
-            </keep-alive>
+            </keep-alive> -->
+            <pingce :page="pages[currentId -1]" v-on:showAlert="showAlert"></pingce>
           </scroll>
         </div>
       </div>
+      <alert :title="alertObject.title" :content="alertObject.content" :ok-text='alertObject.okText' ref="alert"></alert>
+      <confirm :title="'确认'" :content="'提交后对满意率勾选无法修改，十日内意见建议栏任可填写更改。'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
     </page>
   </div>
 </template>
@@ -31,12 +34,12 @@ import Content from './weui/components/content';
 import Page from './weui/components/page/index';
 import { Footer, Item } from './weui/components/footer';
 import Scroll from './weui/components/scroll';
-
+import { Alert, Confirm } from './modal';
 import Pingce from './pingce';
 export default {
   name: 'Main',
   components: {
-    'page-content': Content, Page, 'page-footer': Footer, 'footer-item': Item, Pingce, Scroll
+    'page-content': Content, Page, 'page-footer': Footer, 'footer-item': Item, Pingce, Scroll, Alert, Confirm
   },
   data () {
     var pages = [
@@ -95,6 +98,14 @@ export default {
                   }
                 ]}
             ]
+        },
+        {
+            "id": 6,
+            "title": "南闸街道作风效能建设民主评测表"
+        },
+        {
+            "id": 7,
+            "title": "江阴市机关作风效能建设总体评价表"
         }
     ];
     var tabs = [
@@ -103,14 +114,15 @@ export default {
       {id: '3', title: '江阴市机关作风效能建设民主评测表3', subTitle: '3'},
       {id: '4', title: '江阴市机关作风效能建设民主评测表4', subTitle: '4'},
       {id: '5', title: '江阴市机关作风效能建设民主评测表5', subTitle: '5'},
-      {id: '6', title: '江阴市机关作风效能建设总体评价表', subTitle: '江'},
-      {id: '7', title: '南闸街道作风效能建设民主评测表', subTitle: '南'}];
+      {id: '6', title: '南闸街道作风效能建设民主评测表', subTitle: '南'},
+      {id: '7', title: '江阴市机关作风效能建设总体评价表', subTitle: '江'}];
     this.changeStyle(tabs);
     return {
       pages: pages,
       tabs: tabs,
       currentId: 1,
-      currentView: 'pingce'
+      currentView: 'pingce',
+      alertObject: {okText: '关闭'}
     };
   },
   methods: {
@@ -132,14 +144,14 @@ export default {
     changeView (id, offset) {
       var pageId = id || (parseInt(this.currentId) + offset);
       if (pageId < 1 || pageId > 7) {
+        if (pageId == 0) {
+          // 返回
+        }
+        if (pageId == 8) {
+          // 提交
+          this.$refs.confirm.open();
+        }
         return;
-      }
-      if (pageId == 0) {
-        // 返回
-
-      }
-      if (pageId == 8) {
-        // 提交
       }
       if (this.currentId == pageId) {
         return;
@@ -149,11 +161,69 @@ export default {
         item.active = item.id == pageId;
       });
       this.changeStyle(this.tabs);
+    },
+    showAlert: function (item) {
+      this.alertObject = {
+        title: item.name,
+        content: item.description,
+        okText: '关闭'
+      };
+      this.$refs.alert.open();
+    },
+    submit: function () {
+      console.log(111);
     }
   },
   mounted () {
   }
 };
 </script>
-<style>
+<style lang="scss">
+.page {
+  .modal {
+    position: fixed;
+    width: 16.5rem;
+    margin-left: -8.25rem;
+    top: 50%;
+    .modal-inner {
+      padding: 0rem;
+      background: #FEFEFE;
+      border-radius: 12px 12px 0 0;
+      .modal-title {
+        color: #CE0205;
+        font-size: 1.4rem;
+        background: url('../images/mzpc/timg.png');
+        background-size: 100% 100%;
+        padding: 0.6rem;
+      }
+      .modal-text {
+        font-size: 14px;
+        line-height: 24px;
+        max-height: 45vh;
+        overflow-y: scroll;
+        padding: 10px;
+      }
+      &:after {
+        height: 0
+      }
+    }
+    .modal-buttons {
+      width: 100%;
+      background: #FEFEFE;
+      height: 60px;
+      border-radius: 0 0 12px 12px;
+      .modal-button {
+        width: 170px;
+        height: 40px;
+        background: #F9B552;
+        color: white;
+        border-radius: 0.4rem;
+        box-shadow: #B3B3AB 0px 3px 2px;
+        margin: 8px;
+        font-size: 16px;
+        line-height: 40px;
+      }
+    }
+  }
+}
 </style>
