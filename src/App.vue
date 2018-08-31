@@ -16,5 +16,7 @@
   };
 </script>
 
-<style lang="scss">
+<style>
+@import './css/style.css';
+@import './css/toast.css'
 </style>

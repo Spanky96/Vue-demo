@@ -1,0 +1,146 @@
+.wrap {
+  margin: 0 auto;
+  width: 95%;
+  background-color: #FBF4DA;
+  max-width: 500px;
+}
+
+.bgtop {
+  position: absolute;
+  background: url('../images/mzpc/bg1.jpg');
+  width: 100vw;
+  height: 16vh;
+  background-size: 100% 100%;
+}
+
+.bgdown {
+  background: url('../images/mzpc/bg2.jpg');
+  position: absolute;
+  width: 100vw;
+  height: 16vh;
+  background-size: 100% 100%;
+  bottom: 0;
+}
+
+.pagger {
+  position: absolute;
+  background: url('../images/mzpc/button2.png');
+  background-size: 100% 100%;
+  bottom: 2vh;
+  display: flex;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  border-radius: 12px;
+  max-width: 480px;
+  width: 90vw;
+  text-align: center;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+}
+
+.pagger .btn {
+  flex: 1;
+  line-height: 6vh;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.pagger .btn.btn-pre {
+  background: url('../images/mzpc/leftico.png') no-repeat 4vw 1.3vh;
+}
+
+.pagger .btn.btn-next {
+  background: url('../images/mzpc/leftico.png') no-repeat 4vw 1.3vh;
+  transform: rotate(180deg);
+}
+
+.pagger .btn.btn-next div {
+  transform: rotate(-180deg);
+}
+
+ul.tabs {
+  height: 30px;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 10px;
+  list-style: none;
+  display: flex;
+}
+
+ul.tabs li a {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  background: #FC6C29;
+  box-shadow: 8px -5px 13px -3px rgba(0, 0, 0, 0.2);
+  border: 1px solid #fff;
+  border-bottom: none;
+  padding: 0 10px;
+  font-size: 15px;
+  transition: padding 0.2s ease, margin 0.2s ease;
+}
+
+.tabs li:first-child a {
+  border-top-left-radius: 8px;
+}
+
+.tabs li:first-child a.active {
+  margin-left: 10px;
+}
+
+.tabs li:last-child a {
+  border-top-right-radius: 8px;
+}
+
+ul.tabs li a.active {
+  margin: -10px 0 0 0;
+  height: 40px;
+  line-height: 40px;
+  background: #FDD000;
+  color: #fff;
+  outline: none;
+  border-radius: 8px 8px 0 0;
+  border: 1px;
+  overflow: hidden;
+}
+
+.group:before,
+.group:after {
+  content: " ";
+  display: table;
+}
+
+.group:after {
+  clear: both;
+}
+
+#content {
+  margin: 0 auto;
+  background: #FEFEFE;
+  box-shadow: 2px 6px 13px -2px rgba(0, 0, 0, 0.3);
+  border: 1px solid #DFDCCE;
+  height: 83vh;
+  width: 95vw;
+  position: absolute;
+  max-width: 500px;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+  padding: 30px 40px;
+  color: #ffffff;
+  line-height: 26px;
+  font-size: 18px;
+  margin: 0;
+}

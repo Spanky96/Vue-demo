@@ -1,20 +1,32 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Index from '@/components/Index';
+import GoodBye from '@/components/GoodBye';
+import Gaozhi from '@/components/Gaozhi';
 import Main from '@/components/Main';
-import Buttons from '@/components/Buttons';
 
 Vue.use(Router);
 export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Index',
+      component: Index
+    },
+    {
+      path: '/tp',
       name: 'Main',
       component: Main
     },
     {
-      path: '/buttons',
-      name: 'buttons',
-      component: Buttons
+      path: '/bye',
+      name: 'GoodBye',
+      component: GoodBye
+    },
+    {
+      path: '/gz',
+      name: 'Gaozhi',
+      component: Gaozhi
     }
   ]
 });

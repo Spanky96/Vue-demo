@@ -12,7 +12,7 @@
       @scroll="(onInfinite || infiniteLoading) ? onScroll($event) : undefined"
        >
     <div class="scroll-inner"
-      :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }"
+      :style="{ transform: 'translate3d(0, ' + height + ', 0)' }"
       >
       <div class="pull-to-refresh-layer" v-if="!!onRefresh">
         <slot name="refresh">
@@ -111,7 +111,7 @@ export default {
     refresh () {
       this.state = 2
       this.top = this.offset
-      this.onRefresh(this.refreshDone)
+      this.onRefresh && this.onRefresh(this.refreshDone)
     },
     refreshDone () {
       this.state = 0
@@ -120,7 +120,7 @@ export default {
 
     infinite () {
       this.infiniteLoading = true
-      this.onInfinite(this.infiniteDone)
+      this.onInfinite && this.onInfinite(this.infiniteDone)
     },
 
     infiniteDone () {
@@ -139,6 +139,11 @@ export default {
       let bottom = innerHeight - outerHeight - scrollTop - ptrHeight
 
       if (bottom < infiniteHeight) this.infinite()
+    }
+  },
+  computed: {
+    height: function () {
+        return this.top + 44 + 'px';
     }
   }
 }

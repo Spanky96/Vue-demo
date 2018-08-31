@@ -6,11 +6,15 @@ import router from './router';
 import axios from 'axios';
 import Vum from './vum.js';
 import FastClick from 'fastclick';
-
+import Toast from '@/components/toast';
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
+Vue.use(Toast);
 axios.defaults.withCredentials = true;
 Vue.use(Vum);
+Vue.filter('NumFormat', function (value) {
+  return value < 10 ? "0" + value : value;
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

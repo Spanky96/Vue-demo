@@ -1,84 +1,159 @@
 <template>
-<div>
-  <advertisement></advertisement>
-  <page>
-  <page-footer>
-    <footer-item v-bind:class="{ 'active' : currentView === 'home' }" @click.native="changeView('home')">
-      <span class="icon demo-icon-home"></span>
-      <label>主页</label>
-    </footer-item>
-    <footer-item v-bind:class="{ 'active' : currentView === 'slide' }" @click.native="changeView('slide')">
-      <span class="icon demo-icon-search"></span>
-      <label>预约</label>
-    </footer-item>
-    <footer-item v-bind:class="{ 'active' : currentView === 'noti' }" @click.native="changeView('noti')">
-      <span class="icon demo-icon-noti"></span>
-      <span class="badge">2</span>
-      <label>消费记录</label>
-    </footer-item>
-    <footer-item v-bind:class="{ 'active' : currentView === 'about' }" @click.native="changeView('about')">
-      <span class="icon demo-icon-me"></span>
-      <label>个人</label>
-    </footer-item>
-  </page-footer>
-  <keep-alive>
-    <component :is="currentView"></component>
-  </keep-alive>
-</page>
-</div>
+  <div>
+    <page style="background:#FBF4DA">
+      <div class="bgtop"></div>
+      <div class="bgdown">
+        <div class="pagger">
+          <div class="btn btn-pre" @click="changeView(0, -1)"><div>{{ this.currentId > 1 ? '上一页' : '返回' }}</div></div>
+          <div class="btn btn-next" @click="changeView(0, 1)"><div>{{ this.currentId != 7 ? '下一页' : '提交' }}</div></div>
+        </div>
+      </div>
+      <div class="wrap">
+        <ul class="tabs group">
+            <li v-for="(tab, id) in tabs" :key="id">
+              <a @click="changeView(tab.id)" :class="{active: tab.active}" v-bind:style="[tab.style]">{{tab.active ? tab.title : tab.subTitle}}</a>
+            </li>
+        </ul>
+        <div id="content">
+          <scroll :enable-infinite="false" :enable-refresh="false">
+            <keep-alive>
+              <component :is="currentView" :page="pages[currentId -1]"></component>
+            </keep-alive>
+          </scroll>
+        </div>
+      </div>
+    </page>
+  </div>
 </template>
 
 <script>
 import Content from './weui/components/content';
 import Page from './weui/components/page/index';
 import { Footer, Item } from './weui/components/footer';
-import Home from './Home';
-import Advertisement from './Advertisement';
+import Scroll from './weui/components/scroll';
+
+import Pingce from './pingce';
 export default {
-  name: 'HelloWorld',
+  name: 'Main',
   components: {
-    'page-content': Content,
-    Page,
-    'page-footer': Footer,
-    'footer-item': Item,
-    Home,
-    Advertisement
+    'page-content': Content, Page, 'page-footer': Footer, 'footer-item': Item, Pingce, Scroll
   },
   data () {
+    var pages = [
+        {
+            "id": 1,
+            "title": "江阴市机关作风效能建设民主评测表(一)"
+        },
+        {
+            "id": 2,
+            "title": "江阴市机关作风效能建设民主评测表(二)"
+        },
+        {
+            "id": 3,
+            "title": "江阴市机关作风效能建设民主评测表(三)"
+        },
+        {
+            "id": 4,
+            "title": "江阴市机关作风效能建设民主评测表(四)"
+        },
+        {
+            "id": 5,
+            "title": "江阴市机关作风效能建设民主评测表(五)",
+            "className": "第五类　　园区 镇街道",
+            "descrpition": "(请选择符合您看法的选项, 镇(街道) “ 好 ” 票不超过6个单位， 园区“好”票三选一)",
+            "groups": [
+                {
+                    "name": "园区",
+                    "maxGood": 1,
+                    "items": [{
+                        "id": "q01001",
+                        "order": 1,
+                        "name": "高新区",
+                        "description": "弹框描述内容",
+                        "type": "choose"
+                    }, {
+                        "id": "q01002",
+                        "order": 2,
+                        "name": "领港经济开发区",
+                        "description": "弹框描述内容"
+                    }
+                ]},
+                {
+                  "name": "镇街道",
+                  "maxGood": 3,
+                  "items": [{
+                      "id": "q01001",
+                      "order": 1,
+                      "name": "澄江街道",
+                      "description": "弹框描述内容",
+                      "type": "choose"
+                  }, {
+                      "id": "q01002",
+                      "order": 2,
+                      "name": "南闸街道",
+                      "description": "弹框描述内容"
+                  }
+                ]}
+            ]
+        }
+    ];
+    var tabs = [
+      {id: '1', title: '江阴市机关作风效能建设民主评测表1', subTitle: '1', active: true},
+      {id: '2', title: '江阴市机关作风效能建设民主评测表2', subTitle: '2'},
+      {id: '3', title: '江阴市机关作风效能建设民主评测表3', subTitle: '3'},
+      {id: '4', title: '江阴市机关作风效能建设民主评测表4', subTitle: '4'},
+      {id: '5', title: '江阴市机关作风效能建设民主评测表5', subTitle: '5'},
+      {id: '6', title: '江阴市机关作风效能建设总体评价表', subTitle: '江'},
+      {id: '7', title: '南闸街道作风效能建设民主评测表', subTitle: '南'}];
+    this.changeStyle(tabs);
     return {
-      currentView: 'login'
+      pages: pages,
+      tabs: tabs,
+      currentId: 1,
+      currentView: 'pingce'
     };
   },
   methods: {
-    changeView (view) {
-      this.currentView = view;
+    changeStyle (tabs) {
+      var activeIndex = tabs.findIndex((item) => item.active);
+      var maxIndex = tabs.length;
+      tabs.map(function (item, index) {
+        var style = {};
+        style['z-index'] = maxIndex - Math.abs(activeIndex - index);
+        style['left'] = (activeIndex - index) * 6 + 'px';
+        if (activeIndex - index > 0) {
+          style['border-radius'] = '8px 0 0 0';
+        } else if (activeIndex - index < 0) {
+          style['border-radius'] = '0 8px 0 0';
+        }
+        item.style = style;
+      });
+    },
+    changeView (id, offset) {
+      var pageId = id || (parseInt(this.currentId) + offset);
+      if (pageId < 1 || pageId > 7) {
+        return;
+      }
+      if (pageId == 0) {
+        // 返回
+
+      }
+      if (pageId == 8) {
+        // 提交
+      }
+      if (this.currentId == pageId) {
+        return;
+      }
+      this.currentId = pageId;
+      this.tabs.map((item) => {
+        item.active = item.id == pageId;
+      });
+      this.changeStyle(this.tabs);
     }
+  },
+  mounted () {
   }
 };
 </script>
-
 <style>
-.my-page {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  bottom: 2.8rem;
-}
-.demo-icon-home {
-  background-image: url("/static/images/home/home.png");
-  background-size: 100%;
-}
-.demo-icon-search {
-  background-image: url("/static/images/home/search.png");
-  background-size: 100%;
-}
-.demo-icon-noti {
-  background-image: url("/static/images/home/button.png");
-  background-size: 100%;
-}
-.demo-icon-me {
-  background-image: url("/static/images/home/person.png");
-  background-size: 100%;
-}
 </style>
