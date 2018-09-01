@@ -85,13 +85,13 @@ export default {
                   "name": "镇街道",
                   "maxGood": 3,
                   "items": [{
-                      "id": "q01001",
+                      "id": "q02001",
                       "order": 1,
                       "name": "澄江街道",
                       "description": "弹框描述内容",
                       "type": "choose"
                   }, {
-                      "id": "q01002",
+                      "id": "q02002",
                       "order": 2,
                       "name": "南闸街道",
                       "description": "弹框描述内容"
@@ -146,6 +146,7 @@ export default {
       if (pageId < 1 || pageId > 7) {
         if (pageId == 0) {
           // 返回
+          this.$router.push({path: '/gz'});
         }
         if (pageId == 8) {
           // 提交
@@ -166,12 +167,12 @@ export default {
       this.alertObject = {
         title: item.name,
         content: item.description,
-        okText: '关闭'
+        okText: item.okText || '关闭'
       };
       this.$refs.alert.open();
     },
     submit: function () {
-      console.log(111);
+      this.$router.push({path: '/bye'});
     }
   },
   mounted () {
@@ -191,10 +192,10 @@ export default {
       border-radius: 12px 12px 0 0;
       .modal-title {
         color: #CE0205;
-        font-size: 1.4rem;
+        font-size: 1rem;
         background: url('../images/mzpc/timg.png');
         background-size: 100% 100%;
-        padding: 0.6rem;
+        padding: 0.4rem;
       }
       .modal-text {
         font-size: 14px;

@@ -1,7 +1,11 @@
 .wrap {
-  margin: 0 auto;
+  position: absolute;
+  top: 0vh;
+  bottom: 8vh;
+  margin: 2vh auto;
+  left: 0;
+  right: 0;
   width: 95%;
-  background-color: #FBF4DA;
   max-width: 500px;
 }
 
@@ -50,11 +54,13 @@
 }
 
 .pagger .btn.btn-pre {
-  background: url('../images/mzpc/leftico.png') no-repeat 4vw 1.3vh;
+  background: url('../images/mzpc/leftico.png') no-repeat 4vw 1.8vh;
+  background-size: 2.5vh auto;
 }
 
 .pagger .btn.btn-next {
-  background: url('../images/mzpc/leftico.png') no-repeat 4vw 1.3vh;
+  background: url('../images/mzpc/leftico.png') no-repeat 4vw 1.8vh;
+  background-size: 2.5vh auto;
   transform: rotate(180deg);
 }
 
@@ -130,7 +136,8 @@ ul.tabs li a.active {
   background: #FEFEFE;
   box-shadow: 2px 6px 13px -2px rgba(0, 0, 0, 0.3);
   border: 1px solid #DFDCCE;
-  height: 83vh;
+  bottom: 0;
+  top: 44px;
   width: 95vw;
   position: absolute;
   max-width: 500px;

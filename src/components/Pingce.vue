@@ -12,10 +12,11 @@
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order">
               <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname" @click="showInfo(item)">{{item.name}}</div></div>
-              <div class="sub sub-item"><label>好<input type="radio" :name="item.id" class="radio-box"></label><i></i></div>
-              <div class="sub sub-item"><label>较好<input type="radio" :name="item.id" class="radio-box"></label><i></i></div>
-              <div class="sub sub-item"><label>一般<input type="radio" :name="item.id" class="radio-box"></label><i></i></div>
-              <div class="sub sub-item"><label>较差<input type="radio" :name="item.id" class="radio-box"></label><i></i></div>
+              <div class="sub sub-item"><label @click="showTips(group)">好<input type="radio" :name="item.id" class="radio-box" :disabled="checkMaxGood(group)" value="1" v-model="item.checked"></label><i></i></div>
+              <div class="sub sub-item"><label>较好<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.checked"></label><i></i></div>
+              <div class="sub sub-item"><label>一般<input type="radio" :name="item.id" class="radio-box" value="3" v-model="item.checked"></label><i></i></div>
+              <div class="sub sub-item"><label>较差<input type="radio" :name="item.id" class="radio-box" value="4" v-model="item.checked"></label><i></i></div>
+              <div class="sub sub-item"><label>不了解<input type="radio" :name="item.id" class="radio-box" value="5" v-model="item.checked"></label><i></i></div>
             </div>
           </div>
         </div>
@@ -34,7 +35,6 @@
               <div class="sub sub-item"><label>较好<input type="radio" name="nzzp" class="radio-box"></label><i></i></div>
               <div class="sub sub-item"><label>一般<input type="radio" name="nzzp" class="radio-box"></label><i></i></div>
               <div class="sub sub-item"><label>较差<input type="radio" name="nzzp" class="radio-box"></label><i></i></div>
-              <div class="sub sub-item"><label>不了解<input type="radio" name="nzzp" class="radio-box"></label><i></i></div>
             </div>
           </div>
         </div>
@@ -70,17 +70,20 @@
           </div>
           <hr color="#F9C4A2" size="1">
           <div class="no-group-name">3.您对有关部门（单位）和镇（街道）的具体意见和建议。</div>
-          <div id="jvyjs">
+          <div id="jvyjs" v-for="(advice, index) in advices" :key="index">
             <div class="row1">
               <div class="col1">
                 <div class="title">单位名称</div>
               </div>
               <div class="col2">
-                <input type="text">
+                <input type="text" v-model="advice.danwei" @focus="advice.dwShow = true" @blur="closeDwopt(advice)">
+                <ul class="dw-list" v-show="advice.dwShow">
+                  <li class="li-dw" v-for="(dw,id) in getLikelyCompany(advice.danwei)" :key="id" @click="advice.danwei = dw.name">{{dw.name}}</li>
+                </ul>
               </div>
               <div class="col3">
-                <span class="add">1</span>
-                <span class="delete">2</span>
+                <div class="add" @click="addAdvice()" v-if="advices.length -1 == index"></div>
+                <div class="delete" @click="delAdvice(index)" v-if="advices.length > 1"></div>
               </div>
             </div>
             <div class="row2">
@@ -88,7 +91,7 @@
                 <div class="title">具体意见和建议</div>
               </div>
               <div class="col4">
-                <textarea></textarea>
+                <textarea v-model="advice.content" placeholder="请在此输入您的意见建议总体评价......"></textarea>
               </div>
             </div>
           </div>
@@ -109,12 +112,54 @@ export default {
     }
    },
   data () {
+    const companies = [
+      {id: 1, name: '江阴领悟信息'}, {id: 2, name: '江阴海澜之家'},
+      {id: 3, name: '江阴阳光集团'}, {id: 4, name: '江阴华西集团'},
+      {id: 5, name: '江阴万达'}, {id: 6, name: '江阴港龙'},
+      {id: 7, name: '江阴无锡'}, {id: 8, name: '南京领悟'}
+    ];
     return {
+      advices: [{
+        danwei: '',
+        content: '',
+        dwShow: false
+      }],
+      companies
     };
   },
   methods: {
+    checkMaxGood (group) {
+      return group.items.filter((o) => o.checked == 1).length == group.maxGood;
+    },
+    closeDwopt (advice) {
+      setTimeout(function () {
+        advice.dwShow = false;
+      }, 100);
+    },
+    getLikelyCompany (name) {
+      if (!name) {
+        return this.companies;
+      } else {
+        return this.companies.filter((c) => c.name.includes(name.trim()));
+      }
+    },
+    showTips (group) {
+      if (this.checkMaxGood(group)) {
+        this.$emit('showAlert', {name: '提示', description: '您勾选好的单位已超总体的40%，请适当考虑后投票。', okText: '确认'});
+      }
+    },
     showInfo (item) {
       this.$emit('showAlert', item);
+    },
+    addAdvice () {
+      this.advices.push({
+        danwei: '',
+        content: '',
+        dwShow: false
+      });
+    },
+    delAdvice (index) {
+      this.advices.splice(index, 1);
     }
   }
 };
@@ -216,6 +261,9 @@ export default {
       flex: 1;
       padding: 0 15px;
       max-width: 100px;
+      .title {
+        line-height: 25px;
+      }
     }
     .col2 {
       flex: 2;
@@ -224,24 +272,52 @@ export default {
         height: 25px;
         font-size: 14px;
         padding: 5px;
+        width: 160px;
+      }
+      .dw-list {
+        position: absolute;
+        max-height: 150px;
+        z-index: 6;
+        overflow-y: scroll;
+        list-style: none;
+        background: #fff;
+        width: 160px;
+        margin-top: 0;
+        padding: 0 5px;
+        border-bottom: 1px solid;
+        border-left: 1px solid;
+        box-shadow: #867c7c 2px 2px 5px;
+        .li-dw {
+          cursor: pointer;
+          padding: 2px 0;
+          border-bottom: 1px solid #cfcfcf;
+        }
       }
     }
     .col3 {
       flex: 1;
+      display: flex;
       .add {
         background: url('../images/mzpc/ADD.png');
       }
       .delete {
         background: url('../images/mzpc/DEL.png');
       }
+      .add, .delete {
+        height: 20px;
+        width: 20px;
+        background-size: 100% 100%;
+        margin: 2px 5px;
+      }
     }
     .col4 {
-      flex: 4;
+      flex: 3;
       textarea {
           border: none;
           background: rgb(238, 238, 238);
           width: 100%;
           resize: none;
+          height: 18vh;
           padding: 10px;
           font-size: 14px;
           font-family: sans-serif;
@@ -250,6 +326,9 @@ export default {
   }
   .row1 {
     margin-bottom: 10px;
+  }
+  .row2 {
+    margin-bottom: 20px;
   }
 }
 </style>

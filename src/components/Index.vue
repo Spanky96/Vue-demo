@@ -127,8 +127,16 @@ export default {
     }
   }
   .idChoose {
-    margin-top: 16vh;
+    margin: 0 auto;
     text-align: center;
+    position: absolute;
+    background: #FBF4DA;
+    width: 100vw;
+    height: 86vh;
+    max-width: 500px;
+    left: 0;
+    right: 0;
+    top: 16vh;
     .tip-text {color:#BB0301; font-size: 20px;}
     .color-hr {
       height: 5px;
