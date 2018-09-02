@@ -13,12 +13,14 @@
         </div>
       </div>
       <div class="idChoose">
-        <div class="tip-text">请选择您的身份</div>
-        <div class="color-hr"></div>
-        <div class="option-list">
-          <div class="option" v-for="(option, id) in options" :key="id" @click="optionChoosed(option.id)" :class="{active: option.isActive}">{{option.name}}</div>
-        </div>
-        <div class="btn" @click="next()">确定</div>
+        <scroll :enable-infinite="false" :enable-refresh="false">
+          <div class="tip-text">请选择您的身份</div>
+          <div class="color-hr"></div>
+          <div class="option-list">
+            <div class="option" v-for="(option, id) in options" :key="id" @click="optionChoosed(option.id)" :class="{active: option.isActive}">{{option.name}}<div class="pic"></div></div>
+          </div>
+          <div class="btn" @click="next()">确定</div>
+        </scroll>
       </div>
     </page>
   </div>
@@ -28,10 +30,11 @@
 import Content from './weui/components/content';
 import Page from './weui/components/page/index';
 import Toast from './weui/components/toast/index';
+import Scroll from './weui/components/scroll';
 export default {
   name: 'Index',
   components: {
-    'page-content': Content, Page, Toast
+    'page-content': Content, Page, Toast, Scroll
   },
   data () {
     var idConfirm = false;
@@ -64,6 +67,7 @@ export default {
     },
     optionChoosed: function (id) {
       if (!this.idConfirm) {
+        this.$toast('请输入验证码');
         return;
       }
       this.options.map((option) => {
@@ -85,13 +89,13 @@ export default {
   #validate {
     .text {
       text-align: center;
-      padding: 15px 0 10px;
+      padding: 1.5vh 0 1vh;
       font-size: 1rem;
     }
     .validate-code {
       position: absolute;
       right: 0;
-      bottom: 7vh;
+      top: 7vh;
       left: 0;
       margin: auto;
       width: 200px;
@@ -132,7 +136,7 @@ export default {
     position: absolute;
     background: #FBF4DA;
     width: 100vw;
-    height: 86vh;
+    bottom: 0;
     max-width: 500px;
     left: 0;
     right: 0;
@@ -149,12 +153,16 @@ export default {
       margin: 15px 5vw 0;
       .option {
         cursor: pointer;
-        padding: 10px 30px 10px 0;
+        padding: 10px 0;
         text-align: left;
         border-bottom: 1px solid;
         font-size: 14px;
-        &.active {
-          background: url('../images/mzpc/active1.png') no-repeat 80vw 5px;
+        &.active .pic{
+          float: right;
+          width: 25px;
+          height: 25px;
+          background: url('../images/mzpc/active1.png') no-repeat;
+          background-size: 100% 100%;
         }
       }
     }

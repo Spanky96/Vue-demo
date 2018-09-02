@@ -200,9 +200,14 @@ export default {
       .items {
         font-size: 14px;
         line-height: 25px;
+        display: flex;
+        flex-wrap: wrap;
         .item {
           margin-bottom: 5px;
           display: flex;
+          flex: 1;
+          min-width: 300px;
+          padding-right: 20px;
           .sub {
             flex: 1;
             .itemname {

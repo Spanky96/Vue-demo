@@ -6,7 +6,7 @@
   left: 0;
   right: 0;
   width: 95%;
-  max-width: 500px;
+  max-width: 680px;
 }
 
 .bgtop {
@@ -17,6 +17,10 @@
   background-size: 100% 100%;
 }
 
+.bgtop .title-box, .time {
+  visibility: hidden;
+}
+
 .bgdown {
   background: url('../images/mzpc/bg2.jpg');
   position: absolute;
@@ -25,7 +29,62 @@
   background-size: 100% 100%;
   bottom: 0;
 }
-
+@media screen and (max-width: 768px) {
+  .largeShow {
+    display: none !important;
+  }
+}
+@media screen and (min-width: 768px) {
+  .largeHide {
+    display: none !important;
+  }
+  .largeShow a {
+    padding: 0px 3px !important;
+    border-radius: 8px  !important;
+  }
+  .largeShow li{
+    margin: 0 2px;
+  }
+  #main-bgtop.bgtop {
+    background: url('../images/mzpc/bbg.png');
+  }
+  #main-bgtop.bgtop .time {
+    visibility: visible;
+    color: yellow;
+    position: absolute;
+    bottom: 5px;
+    left: 164px;
+    text-align: center;
+    width: 100%;visibility: visible;
+  }
+  #main-bgtop.bgtop .title-box {
+    visibility: visible;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin-top: 4vh;
+  }
+  .title-box .title {
+    color: #ff9e0c;
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    font-size: 40px;
+    z-index: 2;
+  }
+  .title-box .title-stroke {
+    -webkit-text-stroke: #fff 12px;
+    z-index: 1;
+  }
+  .bgdown {
+    display: none;
+  }
+  .wrap {
+    top: 15vh;
+    bottom: 0vh;
+  }
+}
 .pagger {
   position: absolute;
   background: url('../images/mzpc/button2.png');
@@ -140,7 +199,7 @@ ul.tabs li a.active {
   top: 44px;
   width: 95vw;
   position: absolute;
-  max-width: 500px;
+  max-width: 680px;
 }
 
 p {

@@ -1,7 +1,13 @@
 <template>
   <div>
     <page style="background:#FBF4DA">
-      <div class="bgtop"></div>
+      <div id="main-bgtop" class="bgtop">
+        <div class="title-box">
+          <div class="title">江阴民主评测评议</div>
+          <div class="title title-stroke">江阴民主评测评议</div>
+        </div>
+        <div class="time">活动时间：2018年5月12日至2019年2月30日</div>
+      </div>
       <div class="bgdown">
         <div class="pagger">
           <div class="btn btn-pre" @click="changeView(0, -1)"><div>{{ this.currentId > 1 ? '上一页' : '返回' }}</div></div>
@@ -9,9 +15,14 @@
         </div>
       </div>
       <div class="wrap">
-        <ul class="tabs group">
+        <ul class="tabs group largeHide">
             <li v-for="(tab, id) in tabs" :key="id">
               <a @click="changeView(tab.id)" :class="{active: tab.active}" v-bind:style="[tab.style]">{{tab.active ? tab.title : tab.subTitle}}</a>
+            </li>
+        </ul>
+        <ul class="tabs group largeShow">
+            <li v-for="(tab, id) in tabs" :key="id">
+              <a @click="changeView(tab.id)" :class="{active: tab.active}">{{tab.easyTitle}}</a>
             </li>
         </ul>
         <div id="content">
@@ -109,13 +120,13 @@ export default {
         }
     ];
     var tabs = [
-      {id: '1', title: '江阴市机关作风效能建设民主评测表1', subTitle: '1', active: true},
-      {id: '2', title: '江阴市机关作风效能建设民主评测表2', subTitle: '2'},
-      {id: '3', title: '江阴市机关作风效能建设民主评测表3', subTitle: '3'},
-      {id: '4', title: '江阴市机关作风效能建设民主评测表4', subTitle: '4'},
-      {id: '5', title: '江阴市机关作风效能建设民主评测表5', subTitle: '5'},
-      {id: '6', title: '南闸街道作风效能建设民主评测表', subTitle: '南'},
-      {id: '7', title: '江阴市机关作风效能建设总体评价表', subTitle: '江'}];
+      {id: '1', title: '江阴市机关作风效能建设民主评测表1', subTitle: '1', easyTitle: '第一类测评', active: true},
+      {id: '2', title: '江阴市机关作风效能建设民主评测表2', subTitle: '2', easyTitle: '第二类测评'},
+      {id: '3', title: '江阴市机关作风效能建设民主评测表3', subTitle: '3', easyTitle: '第三类测评'},
+      {id: '4', title: '江阴市机关作风效能建设民主评测表4', subTitle: '4', easyTitle: '第四类测评'},
+      {id: '5', title: '江阴市机关作风效能建设民主评测表5', subTitle: '5', easyTitle: '第五类测评'},
+      {id: '6', title: '南闸街道作风效能建设民主评测表', subTitle: '南', easyTitle: '南闸总体评价表'},
+      {id: '7', title: '江阴市机关作风效能建设总体评价表', subTitle: '江', easyTitle: '江阴总体评价表'}];
     this.changeStyle(tabs);
     return {
       pages: pages,

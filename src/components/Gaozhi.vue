@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page id="gaozhi" style="background:#FBF4DA">
+    <page id="gaozhi" style="background:#FBF4DA;overflow-y: scroll;">
       <div class="bgtop">
         <div class="title">2018江阴市机关作风效能民主评测活动</div>
       </div>
