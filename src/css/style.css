@@ -29,7 +29,7 @@
   background-size: 100% 100%;
   bottom: 0;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   .largeShow {
     display: none !important;
   }
@@ -43,7 +43,27 @@
     border-radius: 8px  !important;
   }
   .largeShow li{
-    margin: 0 2px;
+    margin: 0 2px !important;
+  }
+  .tabs li:first-child a.active {
+    margin-left: 0px !important;;
+  }
+  #app .page {
+    overflow-y:  scroll;
+  }
+  #content {
+    position: initial !important;
+    background: #fff !important;
+  }
+  #content .scroll {
+    overflow: unset !important;
+    margin-top: 44px !important;
+    background: #fff !important;
+  }
+  #content .scroll .scroll-inner{
+    background: #fff;
+    padding-bottom: 2vh;
+    margin-bottom: 2vh;
   }
   #main-bgtop.bgtop {
     background: url('../images/mzpc/bbg.png');
@@ -62,7 +82,7 @@
     position: absolute;
     width: 100%;
     text-align: center;
-    margin-top: 4vh;
+    margin-top: 2.5vh;
   }
   .title-box .title {
     color: #ff9e0c;
