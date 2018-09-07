@@ -4,6 +4,7 @@ import Index from '@/components/Index';
 import GoodBye from '@/components/GoodBye';
 import Gaozhi from '@/components/Gaozhi';
 import Main from '@/components/Main';
+import Validate from '@/components/Validate';
 
 Vue.use(Router);
 export default new Router({
@@ -12,6 +13,11 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Index
+    },
+    {
+      path: '/validate/:identityId',
+      name: 'Validate',
+      component: Validate
     },
     {
       path: '/tp',

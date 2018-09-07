@@ -11,6 +11,9 @@ export default {
     if (typeof value === typeof {}) value = JSON.stringify(value);
     return localStorage.setItem(name, value);
   },
+  getObject (name) {
+    return JSON.parse(localStorage.getItem(name));
+  },
   remove (name) {
     return localStorage.removeItem(name);
   }

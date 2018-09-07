@@ -23,14 +23,66 @@ export default {
   },
   data () {
     return {
+      // 数据加载完毕 1  加载失败 -1
+      status: 0
     };
   },
   methods: {
     startPc: function () {
-      this.$router.push({path: '/tp'});
+      if (this.status == 1) {
+        this.$router.push({path: '/tp'});
+      } else if (this.status == 0) {
+        this.$toast('数据正在加载，请稍后');
+      } else if (this.status == -1) {
+        this.getPageList();
+        this.getCompanyList();
+      }
+    },
+    getPageList: function () {
+      var vm = this;
+      var url = 'api/forminfo/getFormInfo.jsp?actId=lh2k24obyosi';
+      if (this.$db.get('memberId')) {
+        url += '&memberId=' + this.$db.get('memberId');
+      }
+      this.$http.get(url)
+        .then(function (res) {
+          if (res.data.success) {
+            vm.status = 1;
+            var pages = res.data.pages;
+            if (pages[pages.length - 1].dwadvise.length == 0) {
+              pages[pages.length - 1].dwadvise.push({danwei: '', advise: '', dwShow: false});
+            }
+            vm.$db.set('pages', pages);
+            vm.$db.set('tabs', res.data.tabs);
+            vm.$db.set('editable', res.data.status != 'Y');
+          } else {
+            vm.status = -1;
+            vm.$toast(res.data.msg);
+          }
+        }).catch(function (err) {
+          console.log(err);
+          vm.status = -1;
+          window.alert(err);
+        });
+    },
+    getCompanyList: function () {
+      var vm = this;
+      this.$http.get('api/dept/getDepts.jsp')
+        .then(function (res) {
+          if (res.data.success) {
+            vm.$db.set('companies', res.data.companies);
+          } else {
+            window.alert(res.data.msg);
+          }
+        }).catch(function (err) {
+          console.log(err);
+          window.alert(err);
+        });
     }
   },
   mounted () {
+    this.getPageList();
+    this.getCompanyList();
   }
 };
 </script>

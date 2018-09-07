@@ -5,7 +5,7 @@
         <div class="text"> 感谢您的参与!</div>
         <div class="text-stroke"> 感谢您的参与!</div>
       </div>
-      <div class="btn">完成</div>
+      <div class="btn" @click="back()">完成</div>
     </page>
   </div>
 </template>
@@ -19,6 +19,9 @@ export default {
     'page-content': Content, Page
   },
   methods: {
+    back () {
+      this.$router.push({path: '/tp'});
+    }
   }
 };
 </script>

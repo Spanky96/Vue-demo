@@ -15,7 +15,7 @@ class RouterConfig {
   config () {
     const router = this.router;
     this.router.beforeEach(function (to, from, next) {
-      console.log(to, from, next);
+      // console.log(to, from, next);
       try {
         const _to = to.path;
         const _from = from.path;
@@ -34,7 +34,7 @@ class RouterConfig {
         }
       } catch (e) {
         // swallo error
-        console.log(e);
+        // console.log(e);
       }
       next();
     });
@@ -42,7 +42,7 @@ class RouterConfig {
       const h = db.get(to.path);
       if (h && h.scrollTop) {
         Vue.nextTick(() => {
-          console.log('should scroll to' + h.scrollTop);
+          // console.log('should scroll to' + h.scrollTop);
           const _to = router.app.$el.querySelectorAll('.page-content')[1];
           if (_to) _to.scrollTop = h.scrollTop; // TODO:
         });

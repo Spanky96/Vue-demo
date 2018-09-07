@@ -19,7 +19,6 @@ module.exports = {
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
@@ -44,10 +43,10 @@ module.exports = {
 
     proxyTable: { 
       '/api': { 
-        target: 'http://localhost:88/', //源地址 
+        target: 'http://192.168.0.40:88/', //源地址 
         changeOrigin: true, //改变源 
         pathRewrite: { 
-          '^/api': 'http://localhost:88/' //路径重写 
+          '^/api': 'http://192.168.0.40:88/websites/_ext/mzpy/' //路径重写 
           } 
       } 
     }

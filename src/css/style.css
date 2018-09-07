@@ -20,7 +20,10 @@
 .bgtop .title-box, .time {
   visibility: hidden;
 }
-
+.item-label {
+  flex: 1;
+  cursor: pointer;
+}
 .bgdown {
   background: url('../images/mzpc/bg2.jpg');
   position: absolute;

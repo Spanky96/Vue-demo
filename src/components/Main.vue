@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page style="background:#FBF4DA">
+    <page style="background:#FBF4DA; overflow-x:hidden;overflow-y:scroll">
       <div id="main-bgtop" class="bgtop">
         <div class="title-box">
           <div class="title">江阴民主评测评议</div>
@@ -10,27 +10,24 @@
       </div>
       <div class="bgdown">
         <div class="pagger">
-          <div class="btn btn-pre" @click="changeView(0, -1)"><div>{{ this.currentId > 1 ? '上一页' : '返回' }}</div></div>
-          <div class="btn btn-next" @click="changeView(0, 1)"><div>{{ this.currentId != 7 ? '下一页' : '提交' }}</div></div>
+          <div class="btn btn-pre" @click="changeView(0, -1)"><div>{{ this.currentIndex > 0 ? '上一页' : '返回' }}</div></div>
+          <div class="btn btn-next" @click="changeView(0, 1)"><div>{{ this.currentIndex + 1 != pages.length ? '下一页' : '提交' }}</div></div>
         </div>
       </div>
       <div class="wrap">
         <ul class="tabs group largeHide">
-            <li v-for="(tab, id) in tabs" :key="id">
-              <a @click="changeView(tab.id)" :class="{active: tab.active}" v-bind:style="[tab.style]">{{tab.active ? tab.title : tab.subTitle}}</a>
+            <li v-for="(tab, index) in tabs" :key="index">
+              <a @click="changeView(index)" :class="{active: tab.active}" v-bind:style="[tab.style]">{{tab.active ? tab.title : tab.subTitle}}</a>
             </li>
         </ul>
         <ul class="tabs group largeShow">
-            <li v-for="(tab, id) in tabs" :key="id">
-              <a @click="changeView(tab.id)" :class="{active: tab.active}">{{tab.easyTitle}}</a>
+            <li v-for="(tab, index) in tabs" :key="index">
+              <a @click="changeView(index)" :class="{active: tab.active}">{{tab.easyTitle}}</a>
             </li>
         </ul>
         <div id="content">
-          <scroll :enable-infinite="false" :enable-refresh="false">
-            <!-- <keep-alive>
-              <component :is="currentView" :page="pages[currentId -1]"></component>
-            </keep-alive> -->
-            <pingce :page="pages[currentId -1]" v-on:showAlert="showAlert"></pingce>
+          <scroll :enable-infinite="false" :enable-refresh="false" ref="scroll">
+            <pingce v-for="(page, index) in pages" :key="index" v-show="currentIndex==index" :page="pages[index]" :editable="editable" v-on:showAlert="showAlert" v-on:changeView="changeView2" v-on:itemChanged="itemChanged" :ref="'pingce'+page.orderNo"></pingce>
           </scroll>
         </div>
       </div>
@@ -53,87 +50,23 @@ export default {
     'page-content': Content, Page, 'page-footer': Footer, 'footer-item': Item, Pingce, Scroll, Alert, Confirm
   },
   data () {
-    var pages = [
-        {
-            "id": 1,
-            "title": "江阴市机关作风效能建设民主评测表(一)"
-        },
-        {
-            "id": 2,
-            "title": "江阴市机关作风效能建设民主评测表(二)"
-        },
-        {
-            "id": 3,
-            "title": "江阴市机关作风效能建设民主评测表(三)"
-        },
-        {
-            "id": 4,
-            "title": "江阴市机关作风效能建设民主评测表(四)"
-        },
-        {
-            "id": 5,
-            "title": "江阴市机关作风效能建设民主评测表(五)",
-            "className": "第五类　　园区 镇街道",
-            "descrpition": "(请选择符合您看法的选项, 镇(街道) “ 好 ” 票不超过6个单位， 园区“好”票三选一)",
-            "groups": [
-                {
-                    "name": "园区",
-                    "maxGood": 1,
-                    "items": [{
-                        "id": "q01001",
-                        "order": 1,
-                        "name": "高新区",
-                        "description": "弹框描述内容",
-                        "type": "choose"
-                    }, {
-                        "id": "q01002",
-                        "order": 2,
-                        "name": "领港经济开发区",
-                        "description": "弹框描述内容"
-                    }
-                ]},
-                {
-                  "name": "镇街道",
-                  "maxGood": 3,
-                  "items": [{
-                      "id": "q02001",
-                      "order": 1,
-                      "name": "澄江街道",
-                      "description": "弹框描述内容",
-                      "type": "choose"
-                  }, {
-                      "id": "q02002",
-                      "order": 2,
-                      "name": "南闸街道",
-                      "description": "弹框描述内容"
-                  }
-                ]}
-            ]
-        },
-        {
-            "id": 6,
-            "title": "南闸街道作风效能建设民主评测表"
-        },
-        {
-            "id": 7,
-            "title": "江阴市机关作风效能建设总体评价表"
-        }
-    ];
-    var tabs = [
-      {id: '1', title: '江阴市机关作风效能建设民主评测表1', subTitle: '1', easyTitle: '第一类测评', active: true},
-      {id: '2', title: '江阴市机关作风效能建设民主评测表2', subTitle: '2', easyTitle: '第二类测评'},
-      {id: '3', title: '江阴市机关作风效能建设民主评测表3', subTitle: '3', easyTitle: '第三类测评'},
-      {id: '4', title: '江阴市机关作风效能建设民主评测表4', subTitle: '4', easyTitle: '第四类测评'},
-      {id: '5', title: '江阴市机关作风效能建设民主评测表5', subTitle: '5', easyTitle: '第五类测评'},
-      {id: '6', title: '南闸街道作风效能建设民主评测表', subTitle: '南', easyTitle: '南闸总体评价表'},
-      {id: '7', title: '江阴市机关作风效能建设总体评价表', subTitle: '江', easyTitle: '江阴总体评价表'}];
+    var pages = this.$db.getObject('pages');
+    var tabs = this.$db.getObject('tabs');
+    // 是否已保存
+    var editable = this.$db.getObject('editable');
+    if (!pages || !tabs) {
+      this.$router.push({path: '/'});
+    }
+    tabs[0].active = true;
     this.changeStyle(tabs);
     return {
       pages: pages,
       tabs: tabs,
-      currentId: 1,
-      currentView: 'pingce',
-      alertObject: {okText: '关闭'}
+      editable: editable,
+      currentIndex: 0,
+      alertObject: {okText: '关闭'},
+      resultCache: this.initResultCache(pages),
+      countCache: 0
     };
   },
   methods: {
@@ -153,26 +86,29 @@ export default {
       });
     },
     changeView (id, offset) {
-      var pageId = id || (parseInt(this.currentId) + offset);
-      if (pageId < 1 || pageId > 7) {
-        if (pageId == 0) {
-          // 返回
-          this.$router.push({path: '/gz'});
-        }
-        if (pageId == 8) {
-          // 提交
-          this.$refs.confirm.open();
-        }
+      var pageId = offset ? (parseInt(this.currentIndex) + offset) : id;
+      if (pageId == -1) {
+        // 返回
+        this.$router.push({path: '/gz'});
         return;
       }
-      if (this.currentId == pageId) {
+      if (pageId == this.pages.length) {
+        this.$refs.confirm.open();
         return;
       }
-      this.currentId = pageId;
-      this.tabs.map((item) => {
-        item.active = item.id == pageId;
+      if (this.currentIndex == pageId) {
+        return;
+      }
+      this.currentIndex = pageId;
+      this.tabs.map((item, index) => {
+        item.active = index == pageId;
       });
       this.changeStyle(this.tabs);
+      document.getElementsByClassName('pull-down')[0].scrollTop = 0;
+      document.getElementsByClassName('page')[0].scrollTop = document.getElementById('main-bgtop').scrollHeight;
+    },
+    changeView2: function (data) {
+      this.changeView(data.id, data.offset);
     },
     showAlert: function (item) {
       this.alertObject = {
@@ -182,11 +118,108 @@ export default {
       };
       this.$refs.alert.open();
     },
+    getUnchoosedItem () {
+      for (var page of this.pages) {
+        if (page.orderNo >= 1 && page.orderNo <= 5) {
+          for (var group of page.groups) {
+            for (var item of group.items) {
+              if (item.chooseStatus == '0') {
+                return {
+                  page: page.title,
+                  item: item.name
+                };
+              }
+            }
+          }
+        }
+        if (page.orderNo == 6) {
+          if (page.advise1.chooseStatus == '0') {
+              return {
+                page: page.title,
+                item: page.deptName
+              };
+          }
+        }
+        if (page.orderNo == 7) {
+          if (page.advise2.chooseStatus == '0') {
+            return {
+              page: page.title,
+              item: '总体评价'
+            };
+          }
+        }
+      }
+      return false;
+    },
+    initResultCache: function (pages) {
+      var resultCache = new Set();
+      pages.forEach(page => {
+        if (page.orderNo >= 1 && page.orderNo <= 5) {
+          page.groups.forEach(group => {
+            group.items.forEach(item => {
+              if (item.chooseStatus != '0') {
+                resultCache.add(item);
+              }
+            });
+          });
+        }
+      });
+      return resultCache;
+    },
     submit: function () {
+      // 提交
+      if (this.editable) {
+        // 1 检查所有选择题 是否已选
+        var unchooseditem = this.getUnchoosedItem();
+        if (unchooseditem) {
+          this.showAlert({
+            name: '提示',
+            description: unchooseditem.page + ' 中存在未选择选项：' + unchooseditem.item + '。',
+            okText: '关闭'
+          });
+          return;
+        } else {
+          // 提交选择题
+          console.log(this.resultCache);
+          this.saveResult(this.resultCache, true);
+        }
+      }
+      // 3 提交主观题
+      this.$refs.pingce6 && this.$refs.pingce6[0].savePage06();
+      this.$refs.pingce7 && this.$refs.pingce7[0].saveZpb();
+      // 4 不可修改
+      this.editable = false;
+      this.$db.set('editable', false);
+      // 5 跳转页面
       this.$router.push({path: '/bye'});
+    },
+    itemChanged (item) {
+      this.resultCache.add(item);
+      if (++this.countCache % 10 == 0) {
+        // 每选择10个 暂存一次
+        this.saveResult(this.resultCache);
+      }
+    },
+    saveResult (resultSet, boolean) {
+      var result = [[], [], [], [], []];
+      resultSet.forEach((o) => {
+        Number(o.chooseStatus) && result[Number(o.chooseStatus) - 1].push(o.id);
+      });
+      this.$http.post('api/save/saveResult.jsp', {
+        actId: 'lh2k24obyosi',
+        memberId: this.$db.get('memberId'),
+        result: result.map((n) => n.join(',')),
+        status: boolean ? 'Y' : 'N'
+      }).then(function (res) {
+          if (res.data.success) {
+            console.log("评测结果暂存成功");
+          } else {
+            console.log("保存失败");
+          }
+        }).catch(function (err) {
+          console.log(err);
+      });
     }
-  },
-  mounted () {
   }
 };
 </script>
@@ -212,8 +245,13 @@ export default {
         font-size: 14px;
         line-height: 24px;
         max-height: 45vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         padding: 10px;
+        p {
+          padding: 0;
+          text-align: left;
+          text-indent: 2em;
+        }
       }
       &:after {
         height: 0

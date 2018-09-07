@@ -1,7 +1,7 @@
 <template>
   <modal :show='show' ref="modal">
     <div slot="title">{{title}}</div>
-    <div slot="content">{{content}}</div>
+    <div slot="content" v-html="content"></div>
     <div slot="buttons" class="modal-buttons">
       <span class="modal-button" @click="_onClick()">{{okText}}</span>
     </div>
@@ -59,6 +59,5 @@ export default {
 .overlay .inner {
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
-
 </style>
 
