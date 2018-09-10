@@ -55,6 +55,7 @@ export default {
             vm.$db.set('pages', pages);
             vm.$db.set('tabs', res.data.tabs);
             vm.$db.set('editable', res.data.status != 'Y');
+            vm.$db.set('submitable', res.data.statusOn != 'Y');
           } else {
             vm.status = -1;
             vm.$toast(res.data.msg);

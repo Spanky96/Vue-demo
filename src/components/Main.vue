@@ -27,7 +27,7 @@
         </ul>
         <div id="content">
           <scroll :enable-infinite="false" :enable-refresh="false" ref="scroll">
-            <pingce v-for="(page, index) in pages" :key="index" v-show="currentIndex==index" :page="pages[index]" :editable="editable" v-on:showAlert="showAlert" v-on:changeView="changeView2" v-on:itemChanged="itemChanged" :ref="'pingce'+page.orderNo"></pingce>
+            <pingce v-for="(page, index) in pages" :key="index" v-show="currentIndex==index" :page="pages[index]" :editable="editable" :submitable="submitable" v-on:showAlert="showAlert" v-on:changeView="changeView2" v-on:itemChanged="itemChanged" :ref="'pingce'+page.orderNo"></pingce>
           </scroll>
         </div>
       </div>
@@ -54,6 +54,7 @@ export default {
     var tabs = this.$db.getObject('tabs');
     // 是否已保存
     var editable = this.$db.getObject('editable');
+    var submitable = this.$db.getObject('submitable');
     if (!pages || !tabs) {
       this.$router.push({path: '/'});
     }
@@ -63,6 +64,7 @@ export default {
       pages: pages,
       tabs: tabs,
       editable: editable,
+      submitable: submitable,
       currentIndex: 0,
       alertObject: {okText: '关闭'},
       resultCache: this.initResultCache(pages),
@@ -93,6 +95,10 @@ export default {
         return;
       }
       if (pageId == this.pages.length) {
+        if (!this.submitable) {
+          this.showAlert({name: '提示', description: '很抱歉,距您上次提交已超10日，无法提交。'});
+          return;
+        }
         this.$refs.confirm.open();
         return;
       }
@@ -167,6 +173,10 @@ export default {
       return resultCache;
     },
     submit: function () {
+      // 如果不能提交，直接return
+      if (!this.submitable) {
+        return;
+      }
       // 提交
       if (this.editable) {
         // 1 检查所有选择题 是否已选
@@ -190,6 +200,8 @@ export default {
       // 4 不可修改
       this.editable = false;
       this.$db.set('editable', false);
+      this.$db.set('pages', this.pages);
+      this.$db.set('tabs', this.tabs);
       // 5 跳转页面
       this.$router.push({path: '/bye'});
     },

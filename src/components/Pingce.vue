@@ -35,17 +35,17 @@
           <div class="no-group-name">1.您对本街道的作风效能的总体评价。</div>
           <div class="items">
             <div class="item">
-              <div class="sub sub-item" @click="showTips()"><label>好<input type="radio" name="nzzp" class="radio-box" value="1" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>较好<input type="radio" name="nzzp" class="radio-box" value="2" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>一般<input type="radio" name="nzzp" class="radio-box" value="3" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>较差<input type="radio" name="nzzp" class="radio-box" value="4" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>好<input type="radio" name="jdzp" class="radio-box" value="1" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>较好<input type="radio" name="jdzp" class="radio-box" value="2" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>一般<input type="radio" name="jdzp" class="radio-box" value="3" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>较差<input type="radio" name="jdzp" class="radio-box" value="4" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
             </div>
           </div>
         </div>
         <div class="no-group">
           <div class="no-group-name">2.您对本街道的的具体意见和建议。</div>
           <div class="textarea">
-            <textarea name="nzjy" id="nzjy" placeholder="请在此输入您的具体意见和建议......" style="width:100%" v-model="page.advise1.advise" @blur="savePage06()"></textarea>
+            <textarea name="nzjy" id="nzjy" placeholder="请在此输入您的具体意见和建议......" style="width:100%" :disabled="!submitable" v-model="page.advise1.advise" @blur="savePage06()"></textarea>
           </div>
           <div class="ps">注: 批评意见包括表扬，批评及建议，尽量反应具体事例。</div>
         </div>
@@ -74,7 +74,7 @@
         <div class="no-group">
           <div class="no-group-name">2.您对全市机关作风效能的意见建议总体评价。</div>
           <div class="textarea">
-            <textarea name="qsjy" id="qsjy" placeholder="请在此输入您的建议总体评价......" style="width:100%" @blur="saveZpb()" v-model="page.advise2.advise"></textarea>
+            <textarea name="qsjy" id="qsjy" placeholder="请在此输入您的建议总体评价......" style="width:100%" @blur="saveZpb()" v-model="page.advise2.advise" :disabled="!submitable"></textarea>
           </div>
           <hr color="#F9C4A2" size="1">
           <div class="no-group-name">3.您对有关部门（单位）和镇（街道）的具体意见和建议。</div>
@@ -93,8 +93,8 @@
                 </div>
               </div>
               <div class="col3">
-                <div class="delete" @click="delAdvice(index)" v-if="page.dwadvise.length > 1"></div>
-                <div class="add" @click="addAdvice()" v-if="page.dwadvise.length -1 == index"></div>
+                <div class="delete" @click="delAdvice(index)" v-if="submitable && page.dwadvise.length > 1"></div>
+                <div class="add" @click="addAdvice()" v-if="submitable && page.dwadvise.length -1 == index"></div>
               </div>
             </div>
             <div class="row2">
@@ -102,7 +102,7 @@
                 <div class="title">具体意见和建议</div>
               </div>
               <div class="col4">
-                <textarea v-model="advice.advise" placeholder="请在此输入您的意见建议总体评价......" @blur="saveZpb()"></textarea>
+                <textarea v-model="advice.advise" placeholder="请在此输入您的意见建议总体评价......" @blur="saveZpb()" :disabled="!submitable"></textarea>
               </div>
             </div>
           </div>
@@ -127,6 +127,9 @@ export default {
     },
     editable: {
       type: Boolean
+    },
+    submitable: {
+      type: Boolean
     }
    },
   data () {
@@ -140,6 +143,9 @@ export default {
       this.$emit('itemChanged', item);
     },
     savePage06 () {
+      if (!this.submitable) {
+        return;
+      }
       var data = {
         advise1: {
           chooseStatus: this.page.advise1.chooseStatus,
@@ -161,6 +167,9 @@ export default {
       });
     },
     saveZpb () {
+      if (!this.submitable) {
+        return;
+      }
       var dwadvise = [];
       this.page.dwadvise.forEach(n => {
           if (n.dwId && n.advise.trim()) {
@@ -197,6 +206,7 @@ export default {
       }, 200);
     },
     showDwopt (advice, index) {
+      if (!this.submitable) return;
       advice.dwShow = true;
       setTimeout(function () {
         document.getElementById('advice' + index).focus();
