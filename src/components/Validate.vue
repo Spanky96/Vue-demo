@@ -39,13 +39,13 @@ export default {
         // 验证code
         vm.$http.get('api/login/checkCode.jsp', {
           params: {
-            actId: 'lh2k24obyosi',
             code: vm.code,
             typeId: identityId
           }}).then(function (res) {
           if (res.data.success) {
               vm.idConfirm = true;
               vm.$db.set('memberId', res.data.memberId);
+              vm.$db.set('active', res.data.active);
               vm.$router.push({path: '/gz'});
           } else {
             vm.$toast(res.data.msg);

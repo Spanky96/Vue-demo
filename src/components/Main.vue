@@ -3,10 +3,10 @@
     <page style="background:#FBF4DA; overflow-x:hidden;overflow-y:scroll">
       <div id="main-bgtop" class="bgtop">
         <div class="title-box">
-          <div class="title">江阴民主评测评议</div>
-          <div class="title title-stroke">江阴民主评测评议</div>
+          <div class="title">{{active.actName}}</div>
+          <div class="title title-stroke">{{active.actName}}</div>
         </div>
-        <div class="time">活动时间：2018年5月12日至2019年2月30日</div>
+        <div class="time">活动时间：{{active.dateStart}}至{{active.dateEnd}}</div>
       </div>
       <div class="bgdown">
         <div class="pagger">
@@ -52,17 +52,20 @@ export default {
   data () {
     var pages = this.$db.getObject('pages');
     var tabs = this.$db.getObject('tabs');
+    var active = this.$db.getObject('active');
     // 是否已保存
     var editable = this.$db.getObject('editable');
     var submitable = this.$db.getObject('submitable');
     if (!pages || !tabs) {
       this.$router.push({path: '/'});
     }
+    tabs.map((n) => { n.active = false; });
     tabs[0].active = true;
     this.changeStyle(tabs);
     return {
       pages: pages,
       tabs: tabs,
+      active: active,
       editable: editable,
       submitable: submitable,
       currentIndex: 0,
@@ -110,8 +113,6 @@ export default {
         item.active = index == pageId;
       });
       this.changeStyle(this.tabs);
-      document.getElementsByClassName('pull-down')[0].scrollTop = 0;
-      document.getElementsByClassName('page')[0].scrollTop = document.getElementById('main-bgtop').scrollHeight;
     },
     changeView2: function (data) {
       this.changeView(data.id, data.offset);
@@ -218,7 +219,7 @@ export default {
         Number(o.chooseStatus) && result[Number(o.chooseStatus) - 1].push(o.id);
       });
       this.$http.post('api/save/saveResult.jsp', {
-        actId: 'lh2k24obyosi',
+        actId: this.active.actId,
         memberId: this.$db.get('memberId'),
         result: result.map((n) => n.join(',')),
         status: boolean ? 'Y' : 'N'

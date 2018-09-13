@@ -2,7 +2,7 @@
   <div>
     <page id="gaozhi" style="background:#FBF4DA;overflow-y: scroll;">
       <div class="bgtop">
-        <div class="title">2018江阴市机关作风效能民主评测活动</div>
+        <div class="title">{{activeName}}</div>
       </div>
       <div class="content">
         <p>在测评过程中，如因故无法完成测评并关闭测评页面后，系统会自动记录当前测评进度，并在下次进入系统后，系统自动加载进度，继续开始未完成的测评.</p>
@@ -23,13 +23,18 @@ export default {
   },
   data () {
     return {
+      activeName: this.$db.get('active').actName,
       // 数据加载完毕 1  加载失败 -1
-      status: 0
+      status: 0,
+      tips: ''
     };
   },
   methods: {
     startPc: function () {
       if (this.status == 1) {
+        if (this.tips) {
+          this.$toast(this.tips);
+        }
         this.$router.push({path: '/tp'});
       } else if (this.status == 0) {
         this.$toast('数据正在加载，请稍后');
@@ -40,7 +45,8 @@ export default {
     },
     getPageList: function () {
       var vm = this;
-      var url = 'api/forminfo/getFormInfo.jsp?actId=lh2k24obyosi';
+      var actId = vm.$db.get('active').actId;
+      var url = 'api/forminfo/getFormInfo.jsp?actId=' + actId;
       if (this.$db.get('memberId')) {
         url += '&memberId=' + this.$db.get('memberId');
       }
@@ -56,6 +62,7 @@ export default {
             vm.$db.set('tabs', res.data.tabs);
             vm.$db.set('editable', res.data.status != 'Y');
             vm.$db.set('submitable', res.data.statusOn != 'Y');
+            vm.tips = res.data.tips;
           } else {
             vm.status = -1;
             vm.$toast(res.data.msg);

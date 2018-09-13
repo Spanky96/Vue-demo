@@ -7,7 +7,7 @@
           <div class="tip-text">请选择您的身份</div>
           <div class="color-hr"></div>
           <div class="option-list">
-            <div class="option" v-for="(option, index) in options" :key="index" @click="optionChoosed(option.typeId)" :class="{active: option.isActive}">{{option.typeName}}<div class="pic"></div></div>
+            <div class="option" v-for="(option, index) in options" :key="index" @click="optionChoosed(option.typeId)" :class="{active: option.isActive}"><div class="name">{{option.typeName}}</div><div class="pic"></div></div>
           </div>
           <div class="btn" @click="next()">确定</div>
         </scroll>
@@ -38,10 +38,24 @@ export default {
       });
     },
     next: function () {
+      var vm = this;
       var type = this.options.find((option) => option.isActive);
       if (type && type.typeId) {
-        if (type.typeId == 8) {
-          this.$router.push({path: '/gz'});
+        if (type.typeId == this.options[this.options.length - 1].typeId) {
+          vm.$http.get('api/login/checkCode.jsp', {
+            params: {
+              typeId: type.typeId
+            }}).then(function (res) {
+            if (res.data.success) {
+                vm.$db.set('memberId', res.data.memberId);
+                vm.$db.set('active', res.data.active);
+                vm.$router.push({path: '/gz'});
+            } else {
+              vm.$toast(res.data.msg);
+            }
+          }).catch(function () {
+            vm.$toast('数据访问失败');
+          });
         } else {
           this.$router.push({path: '/validate/' + type.typeId});
         }
@@ -93,17 +107,30 @@ export default {
     .option-list {
       margin: 15px 5vw 0;
       .option {
+        position: relative;
         cursor: pointer;
         padding: 10px 0;
         text-align: left;
         border-bottom: 1px solid;
         font-size: 14px;
+        display: flex;
+        .name {
+          min-width: 85%;
+          max-width: 85%;
+        }
+        .pic{
+          position: absolute;
+          right: 0px;
+          top: 50%;
+          margin-top: -10px;
+          width: 40px;
+          height: 20px;
+          background: url('../images/mzpc/active1.png') no-repeat 20px;
+          background-size: 50% 100%;
+          visibility: hidden;
+        }
         &.active .pic{
-          float: right;
-          width: 25px;
-          height: 25px;
-          background: url('../images/mzpc/active1.png') no-repeat;
-          background-size: 100% 100%;
+          visibility: visible;
         }
       }
     }

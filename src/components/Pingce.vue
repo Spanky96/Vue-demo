@@ -152,7 +152,7 @@ export default {
           advise: this.page.advise1.advise
         }
       };
-      var url = 'api/save/saveJdb.jsp?actId=lh2k24obyosi';
+      var url = 'api/save/saveJdb.jsp?actId=' + this.$db.get('active').actId;
       if (this.$db.get('memberId')) {
         url += '&memberId=' + this.$db.get('memberId');
       }
@@ -183,7 +183,7 @@ export default {
         advise2: this.page.advise2,
         dwadvise: dwadvise && dwadvise[0] ? dwadvise : []
       };
-      var url = 'api/save/saveZpb.jsp?actId=lh2k24obyosi';
+      var url = 'api/save/saveZpb.jsp?actId=' + this.$db.get('active').actId;
       if (this.$db.get('memberId')) {
         url += '&memberId=' + this.$db.get('memberId');
       }
@@ -318,7 +318,7 @@ export default {
             }
           }
           .sub-name {
-            min-width: 24%;
+            min-width: 27%;
             cursor: pointer;
           }
           .sub-item {
@@ -382,34 +382,36 @@ export default {
     }
     .col2 {
       flex: 2;
+      max-width: 100%;
       position: relative;
       .dwmc {
         height: 25px;
         line-height: 25px;
         font-size: 14px;
-        width: 160px;
+        width: 100%;
         padding-left: 5px;
         color: #546BF7;
         cursor: pointer;
       }
       .choose {
         position: absolute;
+        width: 100%;
         top: 0px;
         input {
           border: 1px solid;
           height: 25px;
           font-size: 14px;
           padding: 5px;
-          width: 160px;
+          width: 100%;
         }
         .dw-list {
           position: absolute;
-          max-height: 150px;
+          max-height: 200px;
           z-index: 6;
           overflow-y: scroll;
           list-style: none;
           background: #fff;
-          width: 160px;
+          width: 100%;
           margin-top: 0;
           padding: 0 5px;
           border-bottom: 1px solid;
@@ -417,7 +419,7 @@ export default {
           box-shadow: #867c7c 2px 2px 5px;
           .li-dw {
             cursor: pointer;
-            padding: 2px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #cfcfcf;
           }
         }
@@ -427,6 +429,7 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: row-reverse;
+      max-width: 60px;
       .add {
         background: url('../images/mzpc/ADD.png');
       }

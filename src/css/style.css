@@ -37,6 +37,9 @@
     display: none !important;
   }
 }
+#app .page {
+  overflow-x: hidden;
+}
 @media screen and (min-width: 768px) {
   .largeHide {
     display: none !important;

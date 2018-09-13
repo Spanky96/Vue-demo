@@ -10,7 +10,6 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
@@ -43,10 +42,10 @@ module.exports = {
 
     proxyTable: { 
       '/api': { 
-        target: 'http://192.168.0.40:88/', //源地址 
+        target: 'http://mzpy.jyit.org:88//', //源地址 
         changeOrigin: true, //改变源 
         pathRewrite: { 
-          '^/api': 'http://192.168.0.40:88/websites/_ext/mzpy/' //路径重写 
+          '^/api': 'http://mzpy.jyit.org:88//websites/_ext/mzpy/api' //路径重写 
           } 
       } 
     }
