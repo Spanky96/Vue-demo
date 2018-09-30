@@ -4,10 +4,10 @@
     <count-down :number="5" @timeover = "timeover" :auto-close="false"></count-down>
   </div>
   <slide-wrapper id="ads">
-    <slide><img src="/static/images/ad/ad1.png" /></slide>
-    <slide><img src="/static/images/ad/ad2.png" /></slide>
-    <slide><img src="/static/images/ad/ad1.png" /></slide>
-    <slide><img src="/static/images/ad/ad2.png" /></slide>
+    <slide><img src="../images/ad/ad1.png" /></slide>
+    <slide><img src="../images/ad/ad2.png" /></slide>
+    <slide><img src="../images/ad/ad1.png" /></slide>
+    <slide><img src="../images/ad/ad2.png" /></slide>
   </slide-wrapper>
 </div>
 </template>

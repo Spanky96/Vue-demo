@@ -66,19 +66,19 @@ export default {
   bottom: 2.8rem;
 }
 .demo-icon-home {
-  background-image: url("/static/images/home/home.png");
+  background-image: url("../images/home/home.png");
   background-size: 100%;
 }
 .demo-icon-search {
-  background-image: url("/static/images/home/search.png");
+  background-image: url("../images/home/search.png");
   background-size: 100%;
 }
 .demo-icon-noti {
-  background-image: url("/static/images/home/button.png");
+  background-image: url("../images/home/button.png");
   background-size: 100%;
 }
 .demo-icon-me {
-  background-image: url("/static/images/home/person.png");
+  background-image: url("../images/home/person.png");
   background-size: 100%;
 }
 </style>

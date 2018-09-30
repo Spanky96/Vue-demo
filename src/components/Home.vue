@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <div><img class="banner" src="/static/images/banner.png"></div>
+    <div><img class="banner" src="../images/banner.png"></div>
     <h1>{{msg}}</h1>
   </div>
 </template>
