@@ -7,7 +7,7 @@
           <div class="tip-text">请选择您的身份</div>
           <div class="color-hr"></div>
           <div class="option-list">
-            <div class="option" v-for="(option, index) in options" :key="index" @click="optionChoosed(option.typeId)" :class="{active: option.isActive}"><div class="name">{{option.typeName}}</div><div class="pic"></div></div>
+            <div class="option" v-for="(option, index) in options" :key="index" @click="optionChoosed(option.typeId)" :class="{active: option.isActive, disabled: option.disabled}"><div class="name">{{option.typeName}}</div><div class="pic"></div></div>
           </div>
           <div class="btn" @click="next()">确定</div>
         </scroll>
@@ -33,6 +33,13 @@ export default {
   },
   methods: {
     optionChoosed: function (id) {
+      var choosedOpt = this.options.find((opt) => {
+        return opt.typeId == id;
+      });
+      if (choosedOpt.disabled) {
+        this.$toast("该身份暂未开放，请选择其他身份。");
+        return;
+      }
       this.options.map((option) => {
          option.isActive = option.typeId == id;
       });
@@ -69,7 +76,11 @@ export default {
         .then(function (res) {
           if (res.data.success) {
             var types = res.data.types;
-            types.map((n) => { n.isActive = false; });
+            types.map((n) => {
+              // 临时修改 公众代表 市民群众无法选择
+              n.disabled = (n.typeName == '公众代表' || n.typeName == '市民群众');
+              n.isActive = false;
+            });
             vm.options = types;
           } else {
             window.alert(res.data.msg);
@@ -114,6 +125,9 @@ export default {
         border-bottom: 1px solid;
         font-size: 14px;
         display: flex;
+        &.disabled .name {
+          color: #c9c9c9;
+        }
         .name {
           min-width: 85%;
           max-width: 85%;

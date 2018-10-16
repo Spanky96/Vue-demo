@@ -1,11 +1,11 @@
 <template>
   <div id="pc-page">
     <div class="h1">{{page.title}}</div>
-    <div class="class-name">{{page.className}}</div>
+    <div class="class-name">{{page.className}}{{getItemNumber(page)}}</div>
     <!-- 选择题 1-5 评测表 START-->
     <div v-if="page.orderNo <= 5">
       <div class="description">({{page.description}})</div>
-      <div class="tips">请点击机关名称查看机关介绍</div>
+      <div class="tips">请点击机关名称查看当年工作实绩</div>
       <div class="groups">
         <div class="group" v-for="(group, index) in page.groups" :key="index">
           <div class="group-name" v-if="page.groups.length > 1">{{group.name}}</div>
@@ -84,10 +84,10 @@
                 <div class="title">单位名称</div>
               </div>
               <div class="col2">
-                <div class="dwmc" @click="showDwopt(advice, index)">{{advice.dwName ? advice.dwName : '请选择'}}</div>
-                <div class="choose" v-show="advice.dwShow">
-                  <input :id="'advice'+index" type="text" v-model="advice.danwei" @blur="closeDwopt(advice)">
-                  <ul class="dw-list">
+                <div class="dwmc">{{advice.dwName ? advice.dwName : ''}}</div>
+                <div class="choose">
+                  <input :id="'advice'+index" type="text" v-model="advice.danwei" @click="showDwopt(advice, index)" @blur="closeDwopt(advice)">
+                  <ul class="dw-list" v-show="advice.dwShow">
                     <li class="li-dw" v-for="(dw,id) in getLikelyCompany(advice.danwei)" :key="id" @click="chooseDwopt(advice, dw)">{{dw.name}}</li>
                   </ul>
                 </div>
@@ -201,7 +201,23 @@ export default {
       return group.items.filter((o) => o.chooseStatus == '1').length == group.maxGood;
     },
     closeDwopt (advice) {
+      var vm = this;
       setTimeout(function () {
+        if (advice.danwei) {
+          var company = vm.companies.find((company) => {
+            return advice.danwei == company.name;
+          });
+          if (company) {
+            advice.dwId = company.id;
+            advice.dwName = company.name;
+          } else {
+            vm.$toast('该单位不存在或不在评议范围内');
+            advice.danwei = '';
+            advice.dwId = '';
+          }
+        } else {
+          advice.dwId = '';
+        }
         advice.dwShow = false;
       }, 200);
     },
@@ -226,7 +242,7 @@ export default {
     },
     getLikelyCompany (name) {
       if (!name) {
-        return this.companies;
+        return [];
       } else {
         return this.companies.filter((c) => c.name.includes(name.trim()));
       }
@@ -254,6 +270,17 @@ export default {
       var zc = this.page.dwadvise[index].dwId;
       this.page.dwadvise.splice(index, 1);
       zc && this.saveZpb();
+    },
+    getItemNumber: function (page) {
+      if (page.orderNo <= 5) {
+        var count = 0;
+        page.groups.forEach((group) => {
+          count += group.items.length;
+        });
+        return '(' + count + '个)';
+      } else {
+        return '';
+      }
     }
   }
 };
@@ -398,11 +425,12 @@ export default {
         width: 100%;
         top: 0px;
         input {
-          border: 1px solid;
           height: 25px;
           font-size: 14px;
           padding: 5px;
           width: 100%;
+          border: none;
+          background: rgb(238, 238, 238);
         }
         .dw-list {
           position: absolute;

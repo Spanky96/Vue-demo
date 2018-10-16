@@ -32,7 +32,7 @@
         </div>
       </div>
       <alert :title="alertObject.title" :content="alertObject.content" :ok-text='alertObject.okText' ref="alert"></alert>
-      <confirm :title="'确认'" :content="'提交后对满意率勾选无法修改，十日内意见建议栏任可填写更改。'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
+      <confirm :title="'确认'" :content="'提交后对满意率勾选无法修改，七日内意见建议栏任可填写更改。是否确认提交?'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
     </page>
   </div>
 </template>
@@ -99,7 +99,7 @@ export default {
       }
       if (pageId == this.pages.length) {
         if (!this.submitable) {
-          this.showAlert({name: '提示', description: '很抱歉,距您上次提交已超10日，无法提交。'});
+          this.showAlert({name: '提示', description: '很抱歉,距您上次提交已超7日，无法提交。'});
           return;
         }
         this.$refs.confirm.open();
@@ -191,7 +191,6 @@ export default {
           return;
         } else {
           // 提交选择题
-          console.log(this.resultCache);
           this.saveResult(this.resultCache, true);
         }
       }
