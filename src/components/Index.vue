@@ -4,7 +4,7 @@
       <div class="bgtop"></div>
       <div class="idChoose">
         <scroll :enable-infinite="false" :enable-refresh="false">
-          <div class="tip-text">请选择您的身份</div>
+          <div class="tip-text">参评人员用户类别</div>
           <div class="color-hr"></div>
           <div class="option-list">
             <div class="option" v-for="(option, index) in options" :key="index" @click="optionChoosed(option.typeId)" :class="{active: option.isActive, disabled: option.disabled}"><div class="name">{{option.typeName}}</div><div class="pic"></div></div>

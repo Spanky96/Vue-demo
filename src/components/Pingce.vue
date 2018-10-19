@@ -32,7 +32,7 @@
     <div v-if="page.orderNo == 6">
       <div class="groups">
         <div class="no-group">
-          <div class="no-group-name">1.您对本街道的作风效能的总体评价。</div>
+          <div class="no-group-name">1.您对本{{getAreaType(page.title)}}的作风效能的总体评价。</div>
           <div class="items">
             <div class="item">
               <div class="sub sub-item" @click="showTips()"><label>好<input type="radio" name="jdzp" class="radio-box" value="1" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="no-group">
-          <div class="no-group-name">2.您对本街道的的具体意见和建议。</div>
+          <div class="no-group-name">2.您对本{{getAreaType(page.title)}}的服务高质量发展的具体意见和建议。</div>
           <div class="textarea">
             <textarea name="nzjy" id="nzjy" placeholder="请在此输入您的具体意见和建议......" style="width:100%" :disabled="!submitable" v-model="page.advise1.advise" @blur="savePage06()"></textarea>
           </div>
@@ -77,7 +77,7 @@
             <textarea name="qsjy" id="qsjy" placeholder="请在此输入您的建议总体评价......" style="width:100%" @blur="saveZpb()" v-model="page.advise2.advise" :disabled="!submitable"></textarea>
           </div>
           <hr color="#F9C4A2" size="1">
-          <div class="no-group-name">3.您对有关部门（单位）和镇（街道）的具体意见和建议。</div>
+          <div class="no-group-name">3.您对有关部门（单位）和镇（街道）服务高质量发展的具体意见和建议。</div>
           <div id="jvyjs" v-for="(advice, index) in page.dwadvise" :key="index">
             <div class="row1">
               <div class="col1">
@@ -281,6 +281,15 @@ export default {
       } else {
         return '';
       }
+    },
+    getAreaType: function (title) {
+      const typeArr = ['高新区', "开发区", "园区", "街道", "镇"];
+      for (var type of typeArr) {
+        if (title.includes(type)) {
+          return type;
+        }
+      }
+      return "地";
     }
   }
 };

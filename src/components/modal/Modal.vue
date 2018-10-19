@@ -50,7 +50,7 @@ export default {
       this.$emit('close', this)
     },
     overlayClick () {
-      this.mutableShow = false
+      overlayClose && (this.mutableShow = false)
     }
   }
 }

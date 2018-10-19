@@ -213,6 +213,7 @@ export default {
       }
     },
     saveResult (resultSet, boolean) {
+      var vm = this;
       var result = [[], [], [], [], []];
       resultSet.forEach((o) => {
         Number(o.chooseStatus) && result[Number(o.chooseStatus) - 1].push(o.id);
@@ -226,7 +227,11 @@ export default {
           if (res.data.success) {
             console.log("评测结果暂存成功");
           } else {
-            console.log("保存失败");
+            vm.showAlert({
+              name: '提示',
+              description: res.data.msg,
+              okText: '关闭'
+            });
           }
         }).catch(function (err) {
           console.log(err);
