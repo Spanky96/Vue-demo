@@ -10,12 +10,12 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/index/:personType?',
       name: 'Index',
       component: Index
     },
     {
-      path: '/validate/:identityId',
+      path: '/',
       name: 'Validate',
       component: Validate
     },

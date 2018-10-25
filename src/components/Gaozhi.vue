@@ -57,6 +57,10 @@ export default {
             var pages = res.data.pages;
             if (pages[pages.length - 1].dwadvise.length == 0) {
               pages[pages.length - 1].dwadvise.push({danwei: '', advise: '', dwShow: false});
+            } else {
+              pages[pages.length - 1].dwadvise.map(function (n) {
+                n.danwei = n.dwName;
+              });
             }
             vm.$db.set('pages', pages);
             vm.$db.set('tabs', res.data.tabs);

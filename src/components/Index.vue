@@ -37,7 +37,7 @@ export default {
         return opt.typeId == id;
       });
       if (choosedOpt.disabled) {
-        this.$toast("该身份暂未开放，请选择其他身份。");
+        this.$toast("很抱歉，您不能选择此身份。");
         return;
       }
       this.options.map((option) => {
@@ -48,46 +48,35 @@ export default {
       var vm = this;
       var type = this.options.find((option) => option.isActive);
       if (type && type.typeId) {
-        if (type.typeId == this.options[this.options.length - 1].typeId) {
-          vm.$http.get('api/login/checkCode.jsp', {
-            params: {
-              typeId: type.typeId
-            }}).then(function (res) {
-            if (res.data.success) {
-                vm.$db.set('memberId', res.data.memberId);
-                vm.$db.set('active', res.data.active);
-                vm.$router.push({path: '/gz'});
-            } else {
-              vm.$toast(res.data.msg);
-            }
-          }).catch(function () {
-            vm.$toast('数据访问失败');
-          });
-        } else {
-          this.$router.push({path: '/validate/' + type.typeId});
-        }
+        vm.$router.push({path: '/gz'});
+        vm.$http.get('api/login/checkTypeId.jsp', {
+          params: {
+            memberId: vm.$db.get('memberId'),
+            typeId: type.typeId
+          }}).then(function (res) {
+          if (res.data.success) {
+              console.log('1');
+          } else {
+            console.log('2');
+          }
+        });
       } else {
         this.$toast('请选择您的身份');
       }
     },
     getIdentities: function () {
       var vm = this;
-      this.$http.get('api/member/getMemberType.jsp')
-        .then(function (res) {
-          if (res.data.success) {
-            var types = res.data.types;
-            types.map((n) => {
-              // 临时修改 公众代表 市民群众无法选择
-              n.disabled = (n.typeName == '公众代表' || n.typeName == '市民群众');
-              n.isActive = false;
-            });
-            vm.options = types;
-          } else {
-            window.alert(res.data.msg);
-          }
-        }).catch(function (err) {
-          window.alert(err);
-        });
+      var typeId = vm.$route.params.personType;
+      var options = this.$db.getObject('personTypes');
+      if (!options) {
+        vm.$router.push({path: '/'});
+        return;
+      }
+      options.map((n) => {
+        n.disabled = !n.isShow;
+        n.isActive = n.typeId == typeId;
+      });
+      vm.options = options;
     }
   },
   mounted () {

@@ -143,35 +143,41 @@ export default {
       this.$emit('itemChanged', item);
     },
     savePage06 () {
-      if (!this.submitable) {
+      var vm = this;
+      if (!vm.submitable) {
         return;
       }
       var data = {
         advise1: {
-          chooseStatus: this.page.advise1.chooseStatus,
-          advise: this.page.advise1.advise
+          chooseStatus: vm.page.advise1.chooseStatus,
+          advise: vm.page.advise1.advise
         }
       };
-      var url = 'api/save/saveJdb.jsp?actId=' + this.$db.get('active').actId;
-      if (this.$db.get('memberId')) {
-        url += '&memberId=' + this.$db.get('memberId');
+      var url = 'api/save/saveJdb.jsp?actId=' + vm.$db.get('active').actId;
+      if (vm.$db.get('memberId')) {
+        url += '&memberId=' + vm.$db.get('memberId');
       }
-      this.$http.post(url, data).then(function (res) {
+      var p = new Promise(function (resolve, reject) {
+        vm.$http.post(url, data).then(function (res) {
           if (res.data.success) {
             console.log("评测结果暂存成功");
           } else {
             console.log("保存失败");
           }
+          resolve("page06");
         }).catch(function (err) {
           console.log(err);
+        });
       });
+      return p;
     },
     saveZpb () {
-      if (!this.submitable) {
+      var vm = this;
+      if (!vm.submitable) {
         return;
       }
       var dwadvise = [];
-      this.page.dwadvise.forEach(n => {
+      vm.page.dwadvise.forEach(n => {
           if (n.dwId && n.advise.trim()) {
             dwadvise.push({
               dwId: n.dwId,
@@ -180,22 +186,26 @@ export default {
           }
       });
       var data = {
-        advise2: this.page.advise2,
+        advise2: vm.page.advise2,
         dwadvise: dwadvise && dwadvise[0] ? dwadvise : []
       };
-      var url = 'api/save/saveZpb.jsp?actId=' + this.$db.get('active').actId;
-      if (this.$db.get('memberId')) {
+      var url = 'api/save/saveZpb.jsp?actId=' + vm.$db.get('active').actId;
+      if (vm.$db.get('memberId')) {
         url += '&memberId=' + this.$db.get('memberId');
       }
-      this.$http.post(url, data).then(function (res) {
+      var p = new Promise(function (resolve, reject) {
+        vm.$http.post(url, data).then(function (res) {
           if (res.data.success) {
             console.log("评测结果暂存成功");
           } else {
             console.log("保存失败");
           }
+          resolve('zpb');
         }).catch(function (err) {
           console.log(err);
+        });
       });
+      return p;
     },
     checkMaxGood (group) {
       return group.items.filter((o) => o.chooseStatus == '1').length == group.maxGood;
@@ -229,13 +239,13 @@ export default {
       }, 200);
     },
     chooseDwopt (advice, dw) {
+      advice.danwei = dw.name;
+      advice.dwName = dw.name;
+      advice.dwShow = false;
       if (advice.dwId == dw.id) {
         return;
       }
-      advice.danwei = dw.name;
       advice.dwId = dw.id;
-      advice.dwName = dw.name;
-      advice.dwShow = false;
       if (advice.advise.trim()) {
         this.saveZpb();
       }

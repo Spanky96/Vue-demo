@@ -6,7 +6,7 @@
           <div class="title">{{active.actName}}</div>
           <div class="title title-stroke">{{active.actName}}</div>
         </div>
-        <div class="time">活动时间：{{active.dateStart}}至{{active.dateEnd}}</div>
+        <div class="time">活动时间：{{active.dateStart}}至{{active.dateEnd}}</div><div id="test" style="display:none;width: 15px;height: 15px;background: #fff;" @click="yjpj()"></div>
       </div>
       <div class="bgdown">
         <div class="pagger">
@@ -90,8 +90,88 @@ export default {
         item.style = style;
       });
     },
+    checkPage (page) {
+      var unchoosedItems = [];
+      if (page.orderNo >= 1 && page.orderNo <= 5) {
+        for (var group of page.groups) {
+          for (var item of group.items) {
+            if (item.chooseStatus == '0') {
+              unchoosedItems.push({
+                item: item.order,
+                group: group.name
+              });
+            }
+          }
+        }
+      }
+      if (page.orderNo == 6) {
+        if (page.advise1.chooseStatus == '0') {
+            unchoosedItems.push({
+              item: page.deptName
+            });
+        }
+      }
+      if (page.orderNo == 7) {
+        if (page.advise2.chooseStatus == '0') {
+          unchoosedItems.push({
+            item: '总体评价'
+          });
+        }
+      }
+      if (unchoosedItems.length) {
+        return {
+          page: page.orderNo,
+          items: unchoosedItems
+        };
+      } else {
+        return false;
+      }
+    },
     changeView (id, offset) {
       var pageId = offset ? (parseInt(this.currentIndex) + offset) : id;
+      if (this.editable && pageId > this.currentIndex) {
+        // 检查有没有未填选项
+        // 1 -> 2 检查 1  1->3 检查 1,2
+        for (var startIndex = parseInt(this.currentIndex); startIndex < pageId; startIndex++) {
+          var page = this.pages[startIndex];
+          var result = this.checkPage(page);
+          if (result) {
+            var description = '';
+            if (startIndex == parseInt(this.currentIndex)) {
+              description = '本页遗有待评项：' + (function () {
+                var res = '';
+                if (result.page == 6 || result.page == 7) {
+                  return result.items[0].item;
+                } else if (result.page == 5) {
+                  var currentGroup = '';
+                  result.items.forEach(function (o) {
+                    if (o.group != currentGroup) {
+                      currentGroup = o.group;
+                      res += '<br>' + currentGroup + ':';
+                    }
+                    res += (o.item < 10 ? "0" + o.item : o.item) + ',';
+                  });
+                  return res;
+                } else {
+                  result.items.forEach(function (o) {
+                    res += (o.item < 10 ? "0" + o.item : o.item) + ',';
+                  });
+                  return res;
+                }
+              })() + '<br>请先给与测评再尝试此操作。';
+            } else {
+              description = '请先完成' + page.title + "再尝试此操作。";
+            }
+            this.showAlert({
+              name: '提示',
+              description: description,
+              okText: '关闭'
+            });
+            return;
+          }
+        }
+      }
+
       if (pageId == -1) {
         // 返回
         this.$router.push({path: '/gz'});
@@ -113,6 +193,8 @@ export default {
         item.active = index == pageId;
       });
       this.changeStyle(this.tabs);
+      document.getElementsByClassName('pull-down')[0].scrollTop = 0;
+      document.getElementsByClassName('page')[0].scrollTop = document.getElementById('main-bgtop').scrollHeight;
     },
     changeView2: function (data) {
       this.changeView(data.id, data.offset);
@@ -173,17 +255,39 @@ export default {
       });
       return resultCache;
     },
+    yjpj: function () {
+      var resultCache = new Set();
+      this.pages.forEach(page => {
+        if (page.orderNo >= 1 && page.orderNo <= 5) {
+          page.groups.forEach(group => {
+            group.items.forEach(item => {
+              if (item.chooseStatus == '0') {
+                item.chooseStatus = Math.ceil(Math.random() * 5);
+                resultCache.add(item);
+              }
+            });
+          });
+        }
+      });
+      this.resultCache = resultCache;
+    },
     submit: function () {
+      var vm = this;
       // 如果不能提交，直接return
-      if (!this.submitable) {
+      if (!vm.submitable) {
         return;
       }
+      // 回调
+      var p1 = null;
+      var p2 = null;
+      var p3 = null;
+
       // 提交
-      if (this.editable) {
+      if (vm.editable) {
         // 1 检查所有选择题 是否已选
-        var unchooseditem = this.getUnchoosedItem();
+        var unchooseditem = vm.getUnchoosedItem();
         if (unchooseditem) {
-          this.showAlert({
+          vm.showAlert({
             name: '提示',
             description: unchooseditem.page + ' 中存在未选择选项：' + unchooseditem.item + '。',
             okText: '关闭'
@@ -191,19 +295,49 @@ export default {
           return;
         } else {
           // 提交选择题
-          this.saveResult(this.resultCache, true);
+          p1 = vm.saveResult(vm.resultCache, true);
         }
       }
       // 3 提交主观题
-      this.$refs.pingce6 && this.$refs.pingce6[0].savePage06();
-      this.$refs.pingce7 && this.$refs.pingce7[0].saveZpb();
-      // 4 不可修改
-      this.editable = false;
-      this.$db.set('editable', false);
-      this.$db.set('pages', this.pages);
-      this.$db.set('tabs', this.tabs);
-      // 5 跳转页面
-      this.$router.push({path: '/bye'});
+      if (vm.$refs.pingce6) {
+        if (p1) {
+          p2 = new Promise(function (resolve, reject) {
+            p1.then(function (data) {
+              console.log(data + "完成下面是06");
+              vm.$refs.pingce6[0].savePage06().then(function (data) {
+                resolve(data);
+              });
+            });
+          });
+        } else {
+          p2 = vm.$refs.pingce6[0].savePage06();
+        }
+      }
+
+      var p = p2 || p1;
+      if (p) {
+        p3 = new Promise(function (resolve, reject) {
+          p.then(function (data) {
+            console.log(data + "完成下面是总评表");
+            vm.$refs.pingce7[0].saveZpb().then(function (data) {
+              resolve(data);
+            });
+          });
+        });
+      } else {
+        p3 = vm.$refs.pingce7[0].saveZpb();
+      }
+
+      p3.then(function (data) {
+        console.log(data + "完成下面是最后操作");
+        // 4 不可修改
+        vm.editable = false;
+        vm.$db.set('editable', false);
+        vm.$db.set('pages', vm.pages);
+        vm.$db.set('tabs', vm.tabs);
+        // 5 跳转页面
+        vm.$router.push({path: '/bye'});
+      });
     },
     itemChanged (item) {
       this.resultCache.add(item);
@@ -218,24 +352,28 @@ export default {
       resultSet.forEach((o) => {
         Number(o.chooseStatus) && result[Number(o.chooseStatus) - 1].push(o.id);
       });
-      this.$http.post('api/save/saveResult.jsp', {
-        actId: this.active.actId,
-        memberId: this.$db.get('memberId'),
-        result: result.map((n) => n.join(',')),
-        status: boolean ? 'Y' : 'N'
-      }).then(function (res) {
-          if (res.data.success) {
-            console.log("评测结果暂存成功");
-          } else {
-            vm.showAlert({
-              name: '提示',
-              description: res.data.msg,
-              okText: '关闭'
-            });
-          }
-        }).catch(function (err) {
-          console.log(err);
+      var p = new Promise(function (resolve, reject) {
+        vm.$http.post('api/save/saveResult.jsp', {
+          actId: vm.active.actId,
+          memberId: vm.$db.get('memberId'),
+          result: result.map((n) => n.join(',')),
+          status: boolean ? 'Y' : 'N'
+        }).then(function (res) {
+            if (res.data.success) {
+              console.log("评测结果暂存成功");
+              resolve("zc");
+            } else {
+              vm.showAlert({
+                name: '提示',
+                description: res.data.msg,
+                okText: '关闭'
+              });
+            }
+          }).catch(function (err) {
+            console.log(err);
+        });
       });
+      return p;
     }
   }
 };
@@ -264,6 +402,7 @@ export default {
         max-height: 45vh;
         overflow-y: auto;
         padding: 10px;
+        word-wrap: break-word;
         p {
           padding: 0;
           text-align: left;
