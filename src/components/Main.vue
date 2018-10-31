@@ -26,7 +26,8 @@
             </li>
         </ul>
         <div id="content">
-          <scroll :enable-infinite="false" :enable-refresh="false" ref="scroll">
+          <div id="fixtips">{{tipInfo}}</div>
+          <scroll :enable-infinite="false" :enable-refresh="false" ref="scroll" id="pcPage">
             <pingce v-for="(page, index) in pages" :key="index" v-show="currentIndex==index" :page="pages[index]" :editable="editable" :submitable="submitable" v-on:showAlert="showAlert" v-on:changeView="changeView2" v-on:itemChanged="itemChanged" :ref="'pingce'+page.orderNo"></pingce>
           </scroll>
         </div>
@@ -62,6 +63,7 @@ export default {
     tabs.map((n) => { n.active = false; });
     tabs[0].active = true;
     this.changeStyle(tabs);
+    var tipInfo = this.getTipInfo(pages[0]);
     return {
       pages: pages,
       tabs: tabs,
@@ -71,8 +73,21 @@ export default {
       currentIndex: 0,
       alertObject: {okText: '关闭'},
       resultCache: this.initResultCache(pages),
-      countCache: 0
+      countCache: 0,
+      tipInfo: tipInfo
     };
+  },
+  watch: {
+    currentIndex (n, old) {
+      this.tipInfo = this.getTipInfo(this.pages[n]);
+      if (this.tipInfo) {
+        document.getElementById('fixtips').style.display = 'block';
+        document.getElementById('pcPage').style.top = '22px';
+      } else {
+        document.getElementById('fixtips').style.display = 'none';
+        document.getElementById('pcPage').style.top = '0px';
+      }
+    }
   },
   methods: {
     changeStyle (tabs) {
@@ -374,6 +389,15 @@ export default {
         });
       });
       return p;
+    },
+    getTipInfo: function (page) {
+      var tip = '';
+      if (page.orderNo >= 1 && page.orderNo <= 4) {
+        tip = '注：' + page.title + '好票不能超过 ' + page.groups[0].maxGood;
+      } else if (page.orderNo == 5) {
+        tip = '注：园区好票三选一, 镇街道好票不超过7';
+      }
+      return tip;
     }
   }
 };
@@ -431,5 +455,14 @@ export default {
       }
     }
   }
+}
+#pcPage {
+  top: 22px;
+}
+#fixtips {
+  color: red;
+  box-shadow: 0 3px 5px #ccc;
+  text-align: center;
+  font-size: 15px;
 }
 </style>

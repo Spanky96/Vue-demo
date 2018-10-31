@@ -94,7 +94,6 @@
               </div>
               <div class="col3">
                 <div class="delete" @click="delAdvice(index)" v-if="submitable && page.dwadvise.length > 1"></div>
-                <div class="add" @click="addAdvice()" v-if="submitable && page.dwadvise.length -1 == index"></div>
               </div>
             </div>
             <div class="row2">
@@ -103,6 +102,11 @@
               </div>
               <div class="col4">
                 <textarea v-model="advice.advise" placeholder="请在此输入您的意见建议总体评价......" @blur="saveZpb()" :disabled="!submitable"></textarea>
+              </div>
+            </div>
+            <div class="row1">
+              <div class="col-add">
+                <div class="add" @click="addAdvice()" v-if="submitable && page.dwadvise.length -1 == index">再添加一条意见建议</div>
               </div>
             </div>
           </div>
@@ -476,18 +480,32 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: row-reverse;
-      max-width: 60px;
-      .add {
-        background: url('../images/mzpc/ADD.png');
-      }
+      max-width: 35px;
       .delete {
         background: url('../images/mzpc/DEL.png');
       }
-      .add, .delete {
+      .delete {
         height: 20px;
         width: 20px;
         background-size: 100% 100%;
         margin: 2px 5px;
+      }
+    }
+    .col-add {
+      flex: 1;
+      display: flex;
+      flex-direction: row-reverse;
+      .add {
+        background: url('../images/mzpc/ADD.png');
+      }
+      .add{
+        height: 20px;
+        background-size: 20px 20px;
+        background-repeat: no-repeat;
+        text-indent: 25px;
+        line-height: 24px;
+        color: #545BF7;
+        cursor: pointer;
       }
     }
     .col4 {
@@ -506,9 +524,6 @@ export default {
   }
   .row1 {
     margin-bottom: 10px;
-  }
-  .row2 {
-    margin-bottom: 20px;
   }
 }
 </style>
