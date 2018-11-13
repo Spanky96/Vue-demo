@@ -33,7 +33,7 @@
         </div>
       </div>
       <alert :title="alertObject.title" :content="alertObject.content" :ok-text='alertObject.okText' ref="alert"></alert>
-      <confirm :title="'确认'" :content="'提交后对满意率勾选无法修改，七日内意见建议栏任可填写更改。是否确认提交?'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
+      <confirm :title="'确认'" :content="'提交后对满意率勾选无法修改，七日内意见建议栏仍可填写更改。是否确认提交?'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
     </page>
   </div>
 </template>
