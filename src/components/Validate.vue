@@ -23,6 +23,7 @@
         </div>
         <div class="btn" @click="validateCode()">确定</div>
       </div>
+      <preloader ref="preloader"></preloader>
     </page>
   </div>
 </template>
@@ -30,10 +31,11 @@
 <script>
 import Content from './weui/components/content';
 import Page from './weui/components/page/index';
+import Preloader from './weui/components/preloader/index';
 export default {
   name: 'Validate',
   components: {
-    'page-content': Content, Page
+    'page-content': Content, Page, Preloader
   },
   data () {
     var idConfirm = false;
@@ -109,6 +111,7 @@ export default {
       }
       if (vm.code) {
         // 验证code
+        vm.$refs.preloader.open();
         vm.$http.get('api/login/checkCode.jsp', {
           params: {
             code: vm.code,
@@ -130,9 +133,11 @@ export default {
               vm.pin = [];
             }
           }
+          vm.$refs.preloader.close();
         }).catch(function (err) {
           console.log(err);
           vm.$toast('数据访问失败');
+          vm.$refs.preloader.close();
         });
       } else {
         vm.$toast('请输入验证码');
