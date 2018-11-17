@@ -33,20 +33,22 @@ export default {
   },
   methods: {
     optionChoosed: function (id) {
-      var choosedOpt = this.options.find((opt) => {
+      var choosedOpt = this.options.find(function (opt) {
         return opt.typeId == id;
       });
       if (choosedOpt.disabled) {
         this.$toast("很抱歉，您不能选择此身份。");
         return;
       }
-      this.options.map((option) => {
-         option.isActive = option.typeId == id;
+      this.options.forEach(function (option) {
+        option.isActive = option.typeId == id;
       });
     },
     next: function () {
       var vm = this;
-      var type = this.options.find((option) => option.isActive);
+      var type = this.options.find(function (option) {
+        return option.isActive;
+      });
       if (type && type.typeId) {
         vm.$router.push({path: '/gz'});
         vm.$http.get('api/login/checkTypeId.jsp', {
@@ -72,7 +74,7 @@ export default {
         vm.$router.push({path: '/'});
         return;
       }
-      options.map((n) => {
+      options.forEach(function (n) {
         n.disabled = !n.isShow;
         n.isActive = n.typeId == typeId;
       });

@@ -181,7 +181,7 @@ export default {
         return;
       }
       var dwadvise = [];
-      vm.page.dwadvise.forEach(n => {
+      vm.page.dwadvise.forEach(function (n) {
           if (n.dwId && n.advise.trim()) {
             dwadvise.push({
               dwId: n.dwId,
@@ -212,13 +212,13 @@ export default {
       return p;
     },
     checkMaxGood (group) {
-      return group.items.filter((o) => o.chooseStatus == '1').length == group.maxGood;
+      return group.items.filter(function (o) { return o.chooseStatus == '1'; }).length == group.maxGood;
     },
     closeDwopt (advice) {
       var vm = this;
       setTimeout(function () {
         if (advice.danwei) {
-          var company = vm.companies.find((company) => {
+          var company = vm.companies.find(function (company) {
             return advice.danwei == company.name;
           });
           if (company) {
@@ -258,7 +258,7 @@ export default {
       if (!name) {
         return [];
       } else {
-        return this.companies.filter((c) => c.name.includes(name.trim()));
+        return this.companies.filter(function (c) { return c.name.includes(name.trim()); });
       }
     },
     showTips (group, item, good) {
@@ -288,7 +288,7 @@ export default {
     getItemNumber: function (page) {
       if (page.orderNo <= 5) {
         var count = 0;
-        page.groups.forEach((group) => {
+        page.groups.forEach(function (group) {
           count += group.items.length;
         });
         return '(' + count + '个)';

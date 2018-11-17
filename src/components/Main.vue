@@ -60,7 +60,7 @@ export default {
     if (!pages || !tabs) {
       this.$router.push({path: '/'});
     }
-    tabs.map((n) => { n.active = false; });
+    tabs.forEach(function (n) { n.active = false; });
     tabs[0].active = true;
     this.changeStyle(tabs);
     var tipInfo = this.getTipInfo(pages[0]);
@@ -91,9 +91,11 @@ export default {
   },
   methods: {
     changeStyle (tabs) {
-      var activeIndex = tabs.findIndex((item) => item.active);
+      var activeIndex = tabs.findIndex(function (item) {
+        return item.active;
+      });
       var maxIndex = tabs.length;
-      tabs.map(function (item, index) {
+      tabs.forEach(function (item, index) {
         var style = {};
         style['z-index'] = maxIndex - Math.abs(activeIndex - index);
         style['left'] = (activeIndex - index) * 6 + 'px';
@@ -204,7 +206,7 @@ export default {
         return;
       }
       this.currentIndex = pageId;
-      this.tabs.map((item, index) => {
+      this.tabs.forEach(function (item, index) {
         item.active = index == pageId;
       });
       this.changeStyle(this.tabs);
@@ -257,10 +259,10 @@ export default {
     },
     initResultCache: function (pages) {
       var resultCache = new Set();
-      pages.forEach(page => {
+      pages.forEach(function (page) {
         if (page.orderNo >= 1 && page.orderNo <= 5) {
-          page.groups.forEach(group => {
-            group.items.forEach(item => {
+          page.groups.forEach(function (group) {
+            group.items.forEach(function (item) {
               if (item.chooseStatus != '0') {
                 resultCache.add(item);
               }
@@ -272,10 +274,10 @@ export default {
     },
     yjpj: function () {
       var resultCache = new Set();
-      this.pages.forEach(page => {
+      this.pages.forEach(function (page) {
         if (page.orderNo >= 1 && page.orderNo <= 5) {
-          page.groups.forEach(group => {
-            group.items.forEach(item => {
+          page.groups.forEach(function (group) {
+            group.items.forEach(function (item) {
               if (item.chooseStatus == '0') {
                 item.chooseStatus = Math.ceil(Math.random() * 5);
                 resultCache.add(item);
@@ -364,14 +366,14 @@ export default {
     saveResult (resultSet, boolean) {
       var vm = this;
       var result = [[], [], [], [], []];
-      resultSet.forEach((o) => {
+      resultSet.forEach(function (o) {
         Number(o.chooseStatus) && result[Number(o.chooseStatus) - 1].push(o.id);
       });
       var p = new Promise(function (resolve, reject) {
         vm.$http.post('api/save/saveResult.jsp', {
           actId: vm.active.actId,
           memberId: vm.$db.get('memberId'),
-          result: result.map((n) => n.join(',')),
+          result: result.map(function (n) { return n.join(','); }),
           status: boolean ? 'Y' : 'N'
         }).then(function (res) {
             if (res.data.success) {
