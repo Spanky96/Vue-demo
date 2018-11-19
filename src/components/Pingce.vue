@@ -342,10 +342,12 @@ export default {
         line-height: 40px;
       }
       .items {
+        @media screen and (min-width: 768px) {
+          display: flex;
+          flex-wrap: wrap;
+        }
         font-size: 14px;
         line-height: 25px;
-        display: flex;
-        flex-wrap: wrap;
         .item {
           margin-bottom: 5px;
           display: flex;
