@@ -353,7 +353,7 @@ export default {
         vm.$db.set('pages', vm.pages);
         vm.$db.set('tabs', vm.tabs);
         // 5 跳转页面
-        vm.$router.push({path: '/bye'});
+        vm.$router.push({path: '/dc'});
       });
     },
     itemChanged (item) {

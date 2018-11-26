@@ -5,6 +5,7 @@ import GoodBye from '@/components/GoodBye';
 import Gaozhi from '@/components/Gaozhi';
 import Main from '@/components/Main';
 import Validate from '@/components/Validate';
+import Diaocha from '@/components/Diaocha';
 
 Vue.use(Router);
 export default new Router({
@@ -33,6 +34,11 @@ export default new Router({
       path: '/gz',
       name: 'Gaozhi',
       component: Gaozhi
+    },
+    {
+      path: '/dc',
+      name: 'Diaocha',
+      component: Diaocha
     }
   ]
 });
