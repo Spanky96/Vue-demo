@@ -66,6 +66,10 @@ export default {
   methods: {
     tijiao: function () {
       var vm = this;
+      if (!(vm.params.question1 && vm.params.question2 && vm.params.question3)) {
+        vm.$toast("您还有未填选项，请先填写。");
+        return;
+      }
       vm.$http.get('api/saveLSTJ/saveLSTJ.jsp', vm.params).then(function (res) {
         vm.$router.push({path: '/bye'});
       });
