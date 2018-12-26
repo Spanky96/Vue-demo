@@ -70,7 +70,7 @@ export default {
         vm.$toast("您还有未填选项，请先填写。");
         return;
       }
-      vm.$http.get('api/saveLSTJ/saveLSTJ.jsp', vm.params).then(function (res) {
+      vm.$http.get('api/saveLSTJ/saveLSTJ.jsp', {params: vm.params}).then(function (res) {
         vm.$router.push({path: '/bye'});
       });
     }
@@ -131,12 +131,9 @@ export default {
     line-height: 40px;
     font-size: 20px;
     cursor: pointer;
-    position: absolute;
     text-align: center;
     margin: 0 auto;
-    left: 0;
-    right: 0;
-    bottom: 16vh;
+    margin-top: 15px;
   }
 }
 </style>
