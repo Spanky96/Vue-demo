@@ -395,9 +395,9 @@ export default {
     getTipInfo: function (page) {
       var tip = '';
       if (page.orderNo >= 1 && page.orderNo <= 4) {
-        tip = '注：' + page.title + '好票不能超过 ' + page.groups[0].maxGood;
+        tip = '注：' + page.title + '满意票不能超过 ' + page.groups[0].maxGood;
       } else if (page.orderNo == 5) {
-        tip = '注：园区好票三选一, 镇街道好票不超过7';
+        tip = '注：园区满意票三选一, 镇街道满意票不超过7';
       }
       return tip;
     }

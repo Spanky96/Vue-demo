@@ -12,10 +12,10 @@
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order">
               <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname" @click="showInfo(item)">{{item.name}}</div></div>
-              <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">好<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>
-              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">较好<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
+              <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">满意<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>
+              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">比较满意<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">一般<input type="radio" :name="item.id" class="radio-box" value="3" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
-              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">较差<input type="radio" :name="item.id" class="radio-box" value="4" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
+              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不满意<input type="radio" :name="item.id" class="radio-box" value="4" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不了解<input type="radio" :name="item.id" class="radio-box" value="5" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
             </div>
           </div>
@@ -35,10 +35,10 @@
           <div class="no-group-name">1.您对本{{getAreaType(page.title)}}的作风效能的总体评价。</div>
           <div class="items">
             <div class="item">
-              <div class="sub sub-item" @click="showTips()"><label>好<input type="radio" name="jdzp" class="radio-box" value="1" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>较好<input type="radio" name="jdzp" class="radio-box" value="2" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>满意<input type="radio" name="jdzp" class="radio-box" value="1" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>比较满意<input type="radio" name="jdzp" class="radio-box" value="2" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
               <div class="sub sub-item" @click="showTips()"><label>一般<input type="radio" name="jdzp" class="radio-box" value="3" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>较差<input type="radio" name="jdzp" class="radio-box" value="4" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>不满意<input type="radio" name="jdzp" class="radio-box" value="4" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
             </div>
           </div>
         </div>
@@ -61,23 +61,23 @@
     <div v-if="page.orderNo == 7">
       <div class="groups">
         <div class="no-group">
-          <div class="no-group-name">1.您对全市机关作风效能的总体评价。</div>
+          <div class="no-group-name">1.您对全市推进高质量发展、党的建设成效的总体评价。</div>
           <div class="items">
             <div class="item">
-              <div class="sub sub-item" @click="showTips()"><label>好<input type="radio" name="nzzp" class="radio-box" value="1" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>较好<input type="radio" name="nzzp" class="radio-box" value="2" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>满意<input type="radio" name="nzzp" class="radio-box" value="1" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>比较满意<input type="radio" name="nzzp" class="radio-box" value="2" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
               <div class="sub sub-item" @click="showTips()"><label>一般<input type="radio" name="nzzp" class="radio-box" value="3" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
-              <div class="sub sub-item" @click="showTips()"><label>较差<input type="radio" name="nzzp" class="radio-box" value="4" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>不满意<input type="radio" name="nzzp" class="radio-box" value="4" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
             </div>
           </div>
         </div>
         <div class="no-group">
-          <div class="no-group-name">2.您对全市机关作风效能的意见建议总体评价。</div>
+          <div class="no-group-name">2.您对全市推进高质量发展、党的建设成效的意见建议。</div>
           <div class="textarea">
             <textarea name="qsjy" id="qsjy" placeholder="请在此输入您的建议总体评价......" style="width:100%" @blur="saveZpb()" v-model="page.advise2.advise" :disabled="!submitable"></textarea>
           </div>
           <hr color="#F9C4A2" size="1">
-          <div class="no-group-name">3.您对有关部门（单位）和镇（街道）服务高质量发展的具体意见和建议。</div>
+          <div class="no-group-name">3.您对有关部分（单位）和镇（街道）的具体意见和建议。</div>
           <div id="jvyjs" v-for="(advice, index) in page.dwadvise" :key="index">
             <div class="row1">
               <div class="col1">
@@ -191,7 +191,7 @@ export default {
       });
       var data = {
         advise2: vm.page.advise2,
-        dwadvise: dwadvise && dwadvise[0] ? dwadvise : []
+        dwadvise: dwadvise[0] ? dwadvise : []
       };
       var url = 'api/save/saveZpb.jsp?actId=' + vm.$db.get('active').actId;
       if (vm.$db.get('memberId')) {
@@ -267,7 +267,7 @@ export default {
         return;
       }
       if (good && item.chooseStatus != '1' && this.checkMaxGood(group)) {
-        this.$emit('showAlert', {name: '提示', description: '勾选好的单位不能超总体的40%，请适当考虑后投票。', okText: '确认'});
+        this.$emit('showAlert', {name: '提示', description: '勾选满意的单位不能超总体的40%，请适当考虑后投票。', okText: '确认'});
       }
     },
     showInfo (item) {
