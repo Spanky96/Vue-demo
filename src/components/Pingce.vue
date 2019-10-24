@@ -77,7 +77,7 @@
             <textarea name="qsjy" id="qsjy" placeholder="请在此输入您的建议总体评价......" style="width:100%" @blur="saveZpb()" v-model="page.advise2.advise" :disabled="!submitable"></textarea>
           </div>
           <hr color="#F9C4A2" size="1">
-          <div class="no-group-name">3.您对有关部分（单位）和镇（街道）的具体意见和建议。</div>
+          <div class="no-group-name">3.您对有关部门（单位）和镇（街道）的具体意见和建议。</div>
           <div id="jvyjs" v-for="(advice, index) in page.dwadvise" :key="index">
             <div class="row1">
               <div class="col1">
