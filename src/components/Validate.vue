@@ -22,6 +22,7 @@
           </div>
         </div>
         <div class="btn" @click="validateCode()">确定</div>
+        <div class="tip">注：如忘记密码请联系主办方。</div>
       </div>
       <preloader ref="preloader"></preloader>
     </page>
@@ -210,6 +211,12 @@ export default {
       left: 0;
       right: 0;
       bottom: 16vh;
+    }
+    .tip {
+      position: fixed;
+      bottom: 0;
+      padding: 10px;
+      font-size: 12px;
     }
   }
   .pin {

@@ -26,7 +26,7 @@
             </li>
         </ul>
         <div id="content">
-          <div id="fixtips">{{tipInfo}}</div>
+          <div id="fixtips">{{tipInfo}} {{getExtraTipInfo()}}</div>
           <scroll :enable-infinite="false" :enable-refresh="false" ref="scroll" id="pcPage">
             <pingce v-for="(page, index) in pages" :key="index" v-show="currentIndex==index" :page="pages[index]" :editable="editable" :submitable="submitable" v-on:showAlert="showAlert" v-on:changeView="changeView2" v-on:itemChanged="itemChanged" :ref="'pingce'+page.orderNo"></pingce>
           </scroll>
@@ -358,6 +358,7 @@ export default {
     },
     itemChanged (item) {
       this.resultCache.add(item);
+      this.getExtraTipInfo();
       if (++this.countCache % 10 == 0) {
         // 每选择10个 暂存一次
         this.saveResult(this.resultCache);
@@ -394,12 +395,23 @@ export default {
     },
     getTipInfo: function (page) {
       var tip = '';
-      if (page.orderNo >= 1 && page.orderNo <= 4) {
+      if (page.orderNo >= 1 && page.orderNo <= 3) {
         tip = '注：' + page.title + '满意票不能超过 ' + page.groups[0].maxGood;
-      } else if (page.orderNo == 5) {
+      } else if (page.orderNo == 4) {
         tip = '注：园区满意票三选一, 镇街道满意票不超过7';
       }
       return tip;
+    },
+    getExtraTipInfo: function () {
+      var page = this.pages[this.currentIndex];
+      var currentGood = 0;
+      if (page.orderNo >= 1 && page.orderNo <= 3) {
+        currentGood = page.groups[0].items.filter(function (o) { return o.chooseStatus == '1'; }).length;
+        return `(${currentGood}/${page.groups[0].maxGood})`;
+      } else if (page.orderNo == 4) {
+        currentGood = page.groups[1].items.filter(function (o) { return o.chooseStatus == '1'; }).length;
+        return `(${currentGood}/${page.groups[1].maxGood})`;
+      }
     }
   }
 };
@@ -431,8 +443,15 @@ export default {
         word-wrap: break-word;
         p {
           padding: 0;
+          color: #000;
           text-align: left;
           text-indent: 2em;
+          font-size: 14px;
+          line-height: 24px;
+          max-height: 45vh;
+          overflow-y: auto;
+          padding: 10px;
+          word-wrap: break-word;
         }
       }
       &:after {
@@ -467,6 +486,6 @@ export default {
   color: red;
   box-shadow: 0 3px 5px #ccc;
   text-align: center;
-  font-size: 15px;
+  font-size: 12px;
 }
 </style>
