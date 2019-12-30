@@ -47,7 +47,7 @@
           <div class="textarea">
             <textarea name="nzjy" id="nzjy" placeholder="请在此输入您的具体意见和建议......" style="width:100%" :disabled="!submitable" v-model="page.advise1.advise" @blur="savePage06()"></textarea>
           </div>
-          <div class="ps">注: 批评意见包括表扬，批评及建议，尽量反应具体事例。</div>
+          <div class="ps">注: 评测意见包括表扬，批评及建议，尽量反应具体事例。</div>
         </div>
       </div>
       <div class="submit-btns largeShow" style="display:flex">

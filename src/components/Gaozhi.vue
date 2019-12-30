@@ -4,9 +4,7 @@
       <div class="bgtop">
         <div class="title">{{activeName}}</div>
       </div>
-      <div class="content">
-        <p>为深入贯彻落实市委、市政府各项决策部署，检验我市高质量发展实际成效，客观真实反映社会各界人士对各参评单位推进（服务）高质量发展的满意程度。根据市《综合考核满意度评价实施方案》，特邀请您参加满意度评价活动。</p>
-        <p>评议时，请您按照测评要求，镇（街道）、开放园区围绕“经济发展、民生改善、服务群众、社会和谐、党风政风”五个方面，市级机关围绕“依法行政、工作效能、业务水平、优质服务、创新举措、党的建设”六个方面内容，参阅各参评单位工作实绩公示，进行客观公正的评议。</p>
+      <div class="content" v-html="actIntroduce">
       </div>
       <div class="btn" @click="startPc()"><div class="text"></div></div>
     </page>
@@ -24,6 +22,7 @@ export default {
   data () {
     return {
       activeName: this.$db.get('active').actName,
+      actIntroduce: this.$db.get('active').actIntroduce,
       // 数据加载完毕 1  加载失败 -1
       status: 0,
       tips: ''
