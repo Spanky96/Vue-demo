@@ -108,7 +108,7 @@ export default {
     font-size: 20px;
     margin: 3vh auto;
   }
-  .content {
+  .content /deep/{
     max-width: 500px;
     margin: 16vh auto 0;
     p {

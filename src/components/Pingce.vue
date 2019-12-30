@@ -1,7 +1,7 @@
 <template>
   <div id="pc-page">
-    <div class="h1">{{page.title}}</div>
-    <div class="class-name">{{page.className}}{{getItemNumber(page)}}</div>
+    <div class="h1">{{page.title}}{{getItemNumber(page)}}</div>
+    <!-- <div class="class-name">{{page.className}}{{getItemNumber(page)}}</div> -->
     <!-- 选择题 1-5 评测表 START-->
     <div v-if="page.orderNo <= 5">
       <div class="description">({{page.description}})</div>
@@ -61,7 +61,7 @@
     <div v-if="page.orderNo == 7">
       <div class="groups">
         <div class="no-group">
-          <div class="no-group-name">1.您对全市推进高质量发展、党的建设成效的总体评价。</div>
+          <div class="no-group-name">1.您对临港开发区机关作风和效能的总体评价。</div>
           <div class="items">
             <div class="item">
               <div class="sub sub-item" @click="showTips()"><label>满意<input type="radio" name="nzzp" class="radio-box" value="1" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
@@ -72,7 +72,7 @@
           </div>
         </div>
         <div class="no-group">
-          <div class="no-group-name">2.您对全市推进高质量发展、党的建设成效的意见建议。</div>
+          <div class="no-group-name">2.您对临港开发区机关作风效能的意见和建议。</div>
           <div class="textarea">
             <textarea name="qsjy" id="qsjy" placeholder="请在此输入您的建议总体评价......" style="width:100%" @blur="saveZpb()" v-model="page.advise2.advise" :disabled="!submitable"></textarea>
           </div>
@@ -110,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div class="ps">注: 1, 批评意见包括表扬，批评及建议，尽量反应具体事例。<br>2, 一个部门（单位）填写一栏。</div>
+          <div class="ps">注: 1, 评议意见包括表扬，批评及建议，尽量反应具体事例。<br>2, 一个部门（单位）填写一栏。</div>
         </div>
       </div>
       <div class="submit-btns largeShow" style="display:flex">

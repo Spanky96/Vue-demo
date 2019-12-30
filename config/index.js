@@ -3,7 +3,8 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-
+// const proxyUrl = 'http://lgmzpy.jyit.org/';
+const proxyUrl = 'http://192.168.0.153:88/';
 module.exports = {
   dev: {
 
@@ -42,11 +43,11 @@ module.exports = {
 
     proxyTable: { 
       '/api': { 
-        target: 'http://mzpy.jyit.org:88//', //源地址 
+        target: proxyUrl, //源地址 
         changeOrigin: true, //改变源 
         pathRewrite: { 
-          '^/api': 'http://mzpy.jyit.org:88//websites/_ext/mzpy/api' //路径重写 
-          } 
+          '^/api': proxyUrl + 'websites/_ext/mzpy/api' //路径重写 
+        }
       } 
     }
   },

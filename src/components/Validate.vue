@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="btn" @click="validateCode()">确定</div>
-        <div class="tip">注:如忘记密码请联系主办方。电话:86860916</div>
+        <!-- <div class="tip">注:如忘记密码请联系主办方。电话:86860916</div> -->
       </div>
       <preloader ref="preloader"></preloader>
     </page>

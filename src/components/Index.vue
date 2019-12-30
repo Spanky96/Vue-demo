@@ -78,6 +78,11 @@ export default {
         n.disabled = !n.isShow;
         n.isActive = n.typeId == typeId;
       });
+      var canUseOption = options.filter(n => !n.disabled);
+      if (canUseOption.length == 1) {
+        var opt = options.find(n => !n.disabled);
+        opt.isActive = true;
+      }
       vm.options = options;
     }
   },
