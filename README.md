@@ -1,6 +1,4 @@
-# sell
-
-> bjcf app
+# tp（投票） 江阴市民主评议主分支
 
 ## Build Setup
 
