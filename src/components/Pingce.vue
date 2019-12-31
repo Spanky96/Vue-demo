@@ -5,13 +5,13 @@
     <!-- 选择题 1-5 评测表 START-->
     <div v-if="page.orderNo <= 5">
       <div class="description">({{page.description}})</div>
-      <div class="tips">请点击机关名称查看当年工作实绩</div>
+      <div class="tips" v-if="showTipTitle">请点击单位名称查看当年工作实绩</div>
       <div class="groups">
         <div class="group" v-for="(group, index) in page.groups" :key="index">
           <div class="group-name" v-if="page.groups.length > 1">{{group.name}}</div>
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order">
-              <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname" @click="showInfo(item)">{{item.name}}</div></div>
+              <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname" :class="{ disable: !item.description }" @click="showInfo(item)">{{item.name}}</div></div>
               <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">满意<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label m60"><div class="sub sub-item">比较满意<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">一般<input type="radio" :name="item.id" class="radio-box" value="3" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
@@ -84,12 +84,15 @@
                 <div class="title">单位名称</div>
               </div>
               <div class="col2">
-                <div class="dwmc">{{advice.dwName ? advice.dwName : ''}}</div>
+                <!-- <div class="dwmc">{{advice.dwName ? advice.dwName : ''}}</div> -->
                 <div class="choose">
-                  <input :id="'advice'+index" type="text" v-model="advice.danwei" @click="showDwopt(advice, index)" @blur="closeDwopt(advice)">
+                  <!-- <input :id="'advice'+index" type="text" v-model="advice.danwei" @click="showDwopt(advice, index)" @blur="closeDwopt(advice)">
                   <ul class="dw-list" v-show="advice.dwShow">
                     <li class="li-dw" v-for="(dw,id) in getLikelyCompany(advice.danwei)" :key="id" @click="chooseDwopt(advice, dw)">{{dw.name}}</li>
-                  </ul>
+                  </ul> -->
+                  <select :name="'advice'+index" v-model="advice.dwId" @change="advice.dwName = advice.danwei">
+                    <option v-for="(item, dwid) in companies" :key="dwid" :value="item.id">{{item.name}}</option>
+                  </select>
                 </div>
               </div>
               <div class="col3">
@@ -240,12 +243,14 @@ export default {
       advice.dwShow = true;
       setTimeout(function () {
         document.getElementById('advice' + index).focus();
+        // document.getElementsByTagName('body')[0].classList.add('dialog-open');
       }, 200);
     },
     chooseDwopt (advice, dw) {
       advice.danwei = dw.name;
       advice.dwName = dw.name;
       advice.dwShow = false;
+      // document.getElementsByTagName('body')[0].classList.remove('dialog-open');
       if (advice.dwId == dw.id) {
         return;
       }
@@ -255,11 +260,12 @@ export default {
       }
     },
     getLikelyCompany (name) {
-      if (!name) {
-        return [];
-      } else {
-        return this.companies.filter(function (c) { return c.name.includes(name.trim()); });
-      }
+      return this.companies;
+      // if (!name) {
+      //   return [];
+      // } else {
+      //  return this.companies.filter(function (c) { return c.name.includes(name.trim()); });
+      // }
     },
     showTips (group, item, good) {
       if (!this.editable) {
@@ -269,11 +275,11 @@ export default {
       if (good && item.chooseStatus != '1' && this.checkMaxGood(group)) {
         var goodItems = group.items.filter(function (o) { return o.chooseStatus == '1'; });
         var goodItemNames = goodItems.map(n => n.name).join(',');
-        this.$emit('showAlert', {name: '提示', description: '勾选满意的单位不能超总体的40%，请适当考虑后投票。<br>当前满意票已投给：' + goodItemNames, okText: '确认'});
+        this.$emit('showAlert', {name: '提示', description: '勾选满意的单位不能超' + group.maxGood + '个，请适当考虑后投票。<br>当前满意票已投给：' + goodItemNames, okText: '确认'});
       }
     },
     showInfo (item) {
-      this.$emit('showAlert', item);
+      item.description && this.$emit('showAlert', item);
     },
     addAdvice () {
       this.page.dwadvise.push({
@@ -307,6 +313,13 @@ export default {
       }
       return "地";
     }
+  },
+  computed: {
+    showTipTitle: function () {
+      return this.page.groups.find(group => {
+        return group.items.find(item => 1 && item.description);
+      });
+    }
   }
 };
 </script>
@@ -314,7 +327,7 @@ export default {
 <style lang="scss" scoped>
 #pc-page {
   color: #535353;
-  padding: 10px;
+  padding: 5px;
   .h1 {
     text-align: center;
     font-weight: bold;
@@ -355,20 +368,25 @@ export default {
           display: flex;
           flex: 1;
           min-width: 300px;
+          justify-content: space-between;
           @media screen and (min-width: 768px) {
             max-width: 330px;
             padding-right: 20px;
           }
           padding-right: 5px;
           .m60 {
-            min-width: 60px;
+            min-width: 50px;
+            font-size: 12px;
           }
           .sub {
-            flex: 1;
             .itemname {
               display: inline;
               color: #546BF7;
               text-decoration: underline;
+              &.disable {
+                // color: unset;
+                text-decoration: unset;
+              }
             }
             .radio-box {
               display: block;
@@ -376,7 +394,8 @@ export default {
             }
           }
           .sub-name {
-            min-width: 27%;
+            min-width: 95px;
+            max-width: 95px;
             cursor: pointer;
           }
           .sub-item {
@@ -463,11 +482,20 @@ export default {
           border: none;
           background: rgb(238, 238, 238);
         }
+        select {
+          border: 1px solid #e6e4e4;
+          border-radius: 0;
+          height: 24px;
+          line-height: 24px;
+          font-size: 14px;
+          width: calc(100% - 30px);
+        }
         .dw-list {
           position: absolute;
           max-height: 200px;
           z-index: 6;
           overflow-y: scroll;
+          -webkit-overflow-scrolling:touch;
           list-style: none;
           background: #fff;
           width: 100%;

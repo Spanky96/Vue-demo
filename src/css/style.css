@@ -2,13 +2,12 @@
   position: absolute;
   top: 0vh;
   bottom: 8vh;
-  margin: 2vh auto;
+  margin: 1vh auto 2vh;
   left: 0;
   right: 0;
   width: 95%;
   max-width: 680px;
 }
-
 .bgtop {
   position: absolute;
   background: url('../images/mzpc/bg1.jpg');
@@ -21,7 +20,7 @@
   visibility: hidden;
 }
 .item-label {
-  flex: 1;
+  min-width: 46px;
   cursor: pointer;
 }
 .bgdown {
@@ -56,6 +55,7 @@
   }
   #app .page {
     overflow-y:  scroll;
+    -webkit-overflow-scrolling:touch;
   }
   #content {
     position: initial !important;

@@ -7,8 +7,9 @@ import db from './db';
 import router from './router';
 import axios from 'axios';
 import Vum from './vum.js';
-// import FastClick from 'fastclick';
+import FastClick from 'fastclick';
 import Toast from '@/components/toast';
+Vue.config.devtools = true;
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 Vue.use(Toast);
@@ -27,4 +28,4 @@ new Vue({
 });
 
 Vum.router(router);
-// FastClick.attach(document.body);
+FastClick.attach(document.body);

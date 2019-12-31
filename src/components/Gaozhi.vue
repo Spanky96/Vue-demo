@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page id="gaozhi" style="background:#FBF4DA;overflow-y: scroll;">
+    <page id="gaozhi" style="background:#FBF4DA;overflow-y: scroll;-webkit-overflow-scrolling:touch;">
       <div class="bgtop">
         <div class="title">{{activeName}}</div>
       </div>
@@ -108,11 +108,20 @@ export default {
     font-size: 20px;
     margin: 3vh auto;
   }
+  @media screen and (min-width: 500px) {
+    .content /deep/{
+      left: calc(50% - 250px);
+    }
+  }
   .content /deep/{
     max-width: 500px;
-    margin: 16vh auto 0;
+    max-height: 70vh;
+    margin: 12vh auto 0;
+    position: absolute;
+    overflow-y: scroll;
+    -webkit-overflow-touch: touch;
     p {
-      line-height: 35px;
+      line-height: 28px;
       text-indent: 2em;
       color: #000;
       font-size: 16px;;
@@ -121,6 +130,9 @@ export default {
     }
   }
   .btn {
+    position: absolute;
+    bottom: 3vh;
+    left: calc(50% - 100px);
     background: url('../images/mzpc/button2.png') no-repeat;
     width: 200px;
     background-size: 100% 100%;

@@ -3,7 +3,7 @@
     <page style="background:#FBF4DA">
       <div class="bgtop"></div>
       <div id="validate">
-        <div class="text">{{idConfirm ? '验证成功' : '请填写验证码'}}</div>
+        <div class="text">{{idConfirm ? '验证成功' : '请填写邀请码'}}</div>
         <div class="validate-code">
           <div class="codebox">
             <input type="number" pattern="[0-9]*" id="code" class="code" :disabled="idConfirm" v-model="code" @keyup.enter="validateCode()">
@@ -126,7 +126,7 @@ export default {
               vm.$router.push({path: '/index' + (res.data.personType ? ('/' + res.data.personType) : '')});
           } else {
             vm.$toast(res.data.msg);
-            if (res.data.msg.includes('验证码')) {
+            if (res.data.msg.includes('邀请码')) {
               vm.code = '';
               vm.pin = [];
             }
@@ -141,7 +141,7 @@ export default {
           vm.$refs.preloader.close();
         });
       } else {
-        vm.$toast('请输入验证码');
+        vm.$toast('请输入邀请码');
       }
     }
   },

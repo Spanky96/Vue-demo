@@ -417,6 +417,11 @@ export default {
 };
 </script>
 <style lang="scss">
+@media screen and (max-width: 768px) {
+.page {
+  user-select: none;
+}
+}
 .page {
   .modal {
     position: fixed;
@@ -480,6 +485,7 @@ export default {
 #pcPage {
   top: 22px;
   overflow-y: scroll;
+  -webkit-overflow-scrolling:touch;
   overflow-x: hidden;
 }
 #fixtips {

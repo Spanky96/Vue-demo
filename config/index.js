@@ -3,8 +3,8 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-// const proxyUrl = 'http://lgmzpy.jyit.org/';
-const proxyUrl = 'http://192.168.0.153:88/';
+const proxyUrl = 'http://lgmzpy.jyit.org/';
+// const proxyUrl = 'http://192.168.0.153:88/';
 module.exports = {
   dev: {
 
