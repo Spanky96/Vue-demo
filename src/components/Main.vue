@@ -157,7 +157,7 @@ export default {
             if (startIndex == parseInt(this.currentIndex)) {
               description = '本页遗有待评项：' + (function () {
                 var res = '';
-                if (result.page >  5) { // 总评表和街道评表
+                if (result.page > 5) { // 总评表和街道评表
                   return result.items[0].item;
                 } else if (result.page == 5) { // 有多组的
                   var currentGroup = '';
