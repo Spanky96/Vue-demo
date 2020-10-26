@@ -242,7 +242,7 @@ export default {
           if (page.advise1.chooseStatus == '0') {
               return {
                 page: page.title,
-                item: page.deptName
+                item: '总体评价'
               };
           }
         }
@@ -298,7 +298,6 @@ export default {
       var p1 = null;
       var p2 = null;
       var p3 = null;
-
       // 提交
       if (vm.editable) {
         // 1 检查所有选择题 是否已选
