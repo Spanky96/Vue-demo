@@ -29,7 +29,7 @@
     <!-- 选择题 1-5 评测表 END-->
 
     <!-- 南闸街道 评测表 START-->
-    <div v-if="page.orderNo == 6">
+    <div v-if="page.isZjd">
       <div class="groups">
         <div class="no-group">
           <div class="no-group-name">1.您对本{{getAreaType(page.title)}}的作风效能的总体评价。</div>
@@ -39,6 +39,7 @@
               <div class="sub sub-item" @click="showTips()"><label>比较满意<input type="radio" name="jdzp" class="radio-box" value="2" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
               <div class="sub sub-item" @click="showTips()"><label>一般<input type="radio" name="jdzp" class="radio-box" value="3" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
               <div class="sub sub-item" @click="showTips()"><label>不满意<input type="radio" name="jdzp" class="radio-box" value="4" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>不了解<input type="radio" name="jdzp" class="radio-box" value="5" v-model="page.advise1.chooseStatus" :disabled="!editable"></label></div>
             </div>
           </div>
         </div>
@@ -58,7 +59,7 @@
     <!-- 南闸街道 评测表 END-->
 
     <!-- 江阴总评 评测表 START-->
-    <div v-if="page.orderNo == 7">
+    <div v-if="page.isZpb">
       <div class="groups">
         <div class="no-group">
           <div class="no-group-name">1.您对全市推进高质量发展、党的建设成效的总体评价。</div>
@@ -68,6 +69,7 @@
               <div class="sub sub-item" @click="showTips()"><label>比较满意<input type="radio" name="nzzp" class="radio-box" value="2" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
               <div class="sub sub-item" @click="showTips()"><label>一般<input type="radio" name="nzzp" class="radio-box" value="3" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
               <div class="sub sub-item" @click="showTips()"><label>不满意<input type="radio" name="nzzp" class="radio-box" value="4" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
+              <div class="sub sub-item" @click="showTips()"><label>不了解<input type="radio" name="nzzp" class="radio-box" value="5" v-model="page.advise2.chooseStatus" :disabled="!editable"></label></div>
             </div>
           </div>
         </div>

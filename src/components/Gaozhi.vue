@@ -55,13 +55,22 @@ export default {
           if (res.data.success) {
             vm.status = 1;
             var pages = res.data.pages;
-            if (pages[pages.length - 1].dwadvise.length == 0) {
-              pages[pages.length - 1].dwadvise.push({danwei: '', advise: '', dwShow: false});
-            } else {
-              pages[pages.length - 1].dwadvise.map(function (n) {
-                n.danwei = n.dwName;
-              });
+            var zpbIndex = pages.findIndex(n => n.isZpb);
+            if (zpbIndex != -1) {
+              if (pages[zpbIndex].dwadvise.length == 0) {
+                pages[zpbIndex].dwadvise.push({danwei: '', advise: '', dwShow: false});
+              } else {
+                pages[zpbIndex].dwadvise.map(function (n) {
+                  n.danwei = n.dwName;
+                });
+              }
             }
+
+            var zjdIndex = pages.findIndex(n => n.isZjd);
+            if (zjdIndex != -1) {
+              pages[zjdIndex].title = res.data.deptName + pages[zjdIndex].title;
+            }
+
             vm.$db.set('pages', pages);
             vm.$db.set('tabs', res.data.tabs);
             vm.$db.set('editable', res.data.status != 'Y');
