@@ -121,14 +121,14 @@ export default {
           }
         }
       }
-      if (page.orderNo == 6) {
+      if (page.isZjd) {
         if (page.advise1.chooseStatus == '0') {
             unchoosedItems.push({
               item: page.deptName
             });
         }
       }
-      if (page.orderNo == 7) {
+      if (page.isZpb) {
         if (page.advise2.chooseStatus == '0') {
           unchoosedItems.push({
             item: '总体评价'
@@ -157,9 +157,9 @@ export default {
             if (startIndex == parseInt(this.currentIndex)) {
               description = '本页遗有待评项：' + (function () {
                 var res = '';
-                if (result.page == 6 || result.page == 7) {
+                if (result.page >  5) { // 总评表和街道评表
                   return result.items[0].item;
-                } else if (result.page == 5) {
+                } else if (result.page == 5) { // 有多组的
                   var currentGroup = '';
                   result.items.forEach(function (o) {
                     if (o.group != currentGroup) {
