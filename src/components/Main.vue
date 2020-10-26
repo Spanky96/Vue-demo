@@ -238,7 +238,7 @@ export default {
             }
           }
         }
-        if (page.orderNo == 6) {
+        if (page.isZjd) {
           if (page.advise1.chooseStatus == '0') {
               return {
                 page: page.title,
@@ -246,7 +246,7 @@ export default {
               };
           }
         }
-        if (page.orderNo == 7) {
+        if (page.isZpb) {
           if (page.advise2.chooseStatus == '0') {
             return {
               page: page.title,
@@ -316,6 +316,20 @@ export default {
         }
       }
       // 3 提交主观题
+      if (vm.$refs.pingce8) {
+        if (p1) {
+          p2 = new Promise(function (resolve, reject) {
+            p1.then(function (data) {
+              console.log(data + "完成下面是06");
+              vm.$refs.pingce8[0].savePage06().then(function (data) {
+                resolve(data);
+              });
+            });
+          });
+        } else {
+          p2 = vm.$refs.pingce8[0].savePage06();
+        }
+      }
       if (vm.$refs.pingce6) {
         if (p1) {
           p2 = new Promise(function (resolve, reject) {
