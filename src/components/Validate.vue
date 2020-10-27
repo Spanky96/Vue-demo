@@ -165,7 +165,7 @@ export default {
     .validate-code {
       margin: auto;
       width: 200px;
-      height: 12px;
+      height: 32px;
     }
     .codebox {
         position: absolute;
