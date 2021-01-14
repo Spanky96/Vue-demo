@@ -11,12 +11,12 @@
           <div class="group-name" v-if="page.groups.length > 1">{{group.name}}</div>
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order">
-              <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname" @click="showInfo(item)">{{item.name}}</div></div>
-              <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">满意<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>
-              <label @click="showTips(group, item)" class="item-label m60"><div class="sub sub-item">比较满意<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
+              <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname" @click="showInfo(item)">{{item.name}}</div><div class="leader">({{item.leader}})</div></div>
+              <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">好<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>
+              <label @click="showTips(group, item)" class="item-label m60"><div class="sub sub-item">较好<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">一般<input type="radio" :name="item.id" class="radio-box" value="3" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
-              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不满意<input type="radio" :name="item.id" class="radio-box" value="4" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
-              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不了解<input type="radio" :name="item.id" class="radio-box" value="5" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
+              <!-- <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不满意<input type="radio" :name="item.id" class="radio-box" value="4" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
+              <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不了解<input type="radio" :name="item.id" class="radio-box" value="5" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label> -->
             </div>
           </div>
         </div>
@@ -372,6 +372,9 @@ export default {
               color: #546BF7;
               text-decoration: underline;
             }
+            .leader {
+              font-size: 12px;
+            }
             .radio-box {
               display: block;
               margin: 5px auto;
@@ -380,6 +383,8 @@ export default {
           .sub-name {
             min-width: 27%;
             cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
           }
           .sub-item {
             text-align: center;

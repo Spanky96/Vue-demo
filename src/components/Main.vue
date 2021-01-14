@@ -347,12 +347,19 @@ export default {
       var p = p2 || p1;
       if (p) {
         p3 = new Promise(function (resolve, reject) {
-          p.then(function (data) {
-            console.log(data + "完成下面是总评表");
-            vm.$refs.pingce7[0].saveZpb().then(function (data) {
+          if (vm.$refs.pingce7) {
+            p.then(function (data) {
+              console.log(data + "完成下面是总评表");
+              vm.$refs.pingce7[0].saveZpb().then(function (data) {
+                resolve(data);
+              });
+            });
+          } else {
+            p.then(function (data) {
               resolve(data);
             });
-          });
+          }
+         
         });
       } else {
         p3 = vm.$refs.pingce7[0].saveZpb();
