@@ -409,7 +409,7 @@ export default {
     getTipInfo: function (page) {
       var tip = '';
       if (page.orderNo >= 1 && page.orderNo <= 3) {
-        tip = '注：' + page.title + '满意票不能超过 ' + page.groups[0].maxGood;
+        tip = '注：' + (page.title.length > 8 ? '该表' : page.title) + '满意票不能超过 ' + page.groups[0].maxGood;
       } else if (page.orderNo == 4) {
         tip = '注：园区满意票三选一, 镇街道满意票不超过' + (page.groups[1] && page.groups[1].maxGood) || '';
       }

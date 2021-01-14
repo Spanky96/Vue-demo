@@ -3,13 +3,13 @@
     <page style="background:#FBF4DA">
       <div class="bgtop"></div>
       <div id="validate">
-        <div class="text">{{idConfirm ? '验证成功' : '请填写验证码'}}</div>
+        <div class="text">{{idConfirm ? '验证成功' : '请填写邀请码'}}</div>
         <div class="validate-code">
           <div class="codebox">
             <input type="number" pattern="[0-9]*" id="code" class="code" :disabled="idConfirm" v-model="code" @keyup.enter="validateCode()">
           </div>
         </div>
-        <div class="pin">
+        <!-- <div class="pin">
           <div class="text">设置或输入4位数密码</div>
           <div class="validate-code">
             <div class="box" :class="{showPw: pwShow}">
@@ -20,9 +20,9 @@
               <div class="toggle" @click="pwShow = !pwShow;"></div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="btn" @click="validateCode()">确定</div>
-        <div class="tip">注:如忘记密码请联系主办方。电话:86860916</div>
+        <!-- <div class="tip">注:如忘记密码请联系主办方。电话:86860916</div> -->
       </div>
       <preloader ref="preloader"></preloader>
     </page>
@@ -104,29 +104,31 @@ export default {
     },
     validateCode: function () {
       var vm = this;
-      var password = this.checkPassword(vm.pin);
-      if (!password) {
-        vm.$toast("密码不符合要求，请重新输入。");
-        vm.pin = [];
-        return;
-      }
+      // var password = this.checkPassword(vm.pin);
+      // if (!password) {
+      //   vm.$toast("密码不符合要求，请重新输入。");
+      //   vm.pin = [];
+      //   return;
+      // }
       if (vm.code) {
         // 验证code
         vm.$refs.preloader.open();
         vm.$http.get('api/login/checkCode.jsp', {
           params: {
             code: vm.code,
-            password: password
+            password: '1111'
           }}).then(function (res) {
           if (res.data.success) {
               vm.idConfirm = true;
               vm.$db.set('memberId', res.data.memberId);
               vm.$db.set('active', res.data.active);
               vm.$db.set('personTypes', res.data.personTypes);
-              vm.$router.push({path: '/index' + (res.data.personType ? ('/' + res.data.personType) : '')});
+              // vm.$router.push({path: '/index' + (res.data.personType ? ('/' + res.data.personType) : '')});
+              // 直接到告知页
+              vm.$router.push({path: '/gz'});
           } else {
             vm.$toast(res.data.msg);
-            if (res.data.msg.includes('验证码')) {
+            if (res.data.msg.includes('邀请码')) {
               vm.code = '';
               vm.pin = [];
             }
@@ -141,7 +143,7 @@ export default {
           vm.$refs.preloader.close();
         });
       } else {
-        vm.$toast('请输入验证码');
+        vm.$toast('请输入邀请码');
       }
     }
   },

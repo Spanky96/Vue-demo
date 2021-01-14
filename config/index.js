@@ -42,10 +42,10 @@ module.exports = {
 
     proxyTable: { 
       '/api': { 
-        target: 'http://mzpy.jyit.org:88//', //源地址 
+        target: 'http://cjjdmzpy.jyit.org:8890/', //源地址 
         changeOrigin: true, //改变源 
         pathRewrite: { 
-          '^/api': 'http://mzpy.jyit.org:88//websites/_ext/mzpy/api' //路径重写 
+          '^/api': 'http://cjjdmzpy.jyit.org:8890/websites/_ext/mzpy/api' //路径重写 
           } 
       } 
     }
