@@ -359,7 +359,6 @@ export default {
               resolve(data);
             });
           }
-         
         });
       } else {
         p3 = vm.$refs.pingce7[0].saveZpb();
