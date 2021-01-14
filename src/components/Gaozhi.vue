@@ -119,7 +119,7 @@ export default {
   .content {
     max-width: 500px;
     margin: 16vh auto 0;
-    p {
+    /deep/ p {
       line-height: 35px;
       text-indent: 2em;
       color: #000;
