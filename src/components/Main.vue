@@ -146,6 +146,7 @@ export default {
     },
     changeView (id, offset) {
       var pageId = offset ? (parseInt(this.currentIndex) + offset) : id;
+      debugger
       if (this.editable && pageId > this.currentIndex) {
         // 检查有没有未填选项
         // 1 -> 2 检查 1  1->3 检查 1,2
@@ -197,6 +198,10 @@ export default {
       if (pageId == this.pages.length) {
         if (!this.submitable) {
           this.showAlert({name: '提示', description: '很抱歉,距您上次提交已超7日，无法提交。'});
+          return;
+        }
+        if (!this.editable) {
+          this.showAlert({name: '提示', description: '您已提交，无法重复提交'});
           return;
         }
         this.$refs.confirm.open();

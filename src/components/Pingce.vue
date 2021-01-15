@@ -270,8 +270,8 @@ export default {
       }
       if (good && item.chooseStatus != '1' && this.checkMaxGood(group)) {
         var goodItems = group.items.filter(function (o) { return o.chooseStatus == '1'; });
-        var goodItemNames = goodItems.map(n => n.name).join(',');
-        this.$emit('showAlert', {name: '提示', description: '勾选满意的单位不能超总体的40%，请适当考虑后投票。<br>当前满意票已投给：' + goodItemNames, okText: '确认'});
+        var goodItemNames = goodItems.map(n => n.leader).join(',');
+        this.$emit('showAlert', {name: '提示', description: "好票不能超过" + group.maxGood + ',请适当考虑后投票。<br>当前好票已投给：' + goodItemNames, okText: '确认'});
       }
     },
     showInfo (item) {
