@@ -33,7 +33,7 @@
         </div>
       </div>
       <alert :title="alertObject.title" :content="alertObject.content" :ok-text='alertObject.okText' ref="alert"></alert>
-      <confirm :title="'确认'" :content="'提交后对满意率勾选无法修改，七日内意见建议栏仍可填写更改。是否确认提交?'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
+      <confirm :title="'确认'" :content="'是否确认提交?'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
     </page>
   </div>
 </template>
@@ -415,7 +415,7 @@ export default {
     getTipInfo: function (page) {
       var tip = '';
       if (page.orderNo >= 1 && page.orderNo <= 3) {
-        tip = '注：' + (page.title.length > 8 ? '该表' : page.title) + '满意票不能超过 ' + page.groups[0].maxGood;
+        tip = '注：' + (page.title.length > 8 ? '该表' : page.title) + '好票不能超过 ' + page.groups[0].maxGood;
       } else if (page.orderNo == 4) {
         tip = '注：园区满意票三选一, 镇街道满意票不超过' + (page.groups[1] && page.groups[1].maxGood) || '';
       }
