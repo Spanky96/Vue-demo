@@ -146,7 +146,6 @@ export default {
     },
     changeView (id, offset) {
       var pageId = offset ? (parseInt(this.currentIndex) + offset) : id;
-      debugger
       if (this.editable && pageId > this.currentIndex) {
         // 检查有没有未填选项
         // 1 -> 2 检查 1  1->3 检查 1,2
