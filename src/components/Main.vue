@@ -418,6 +418,9 @@ export default {
     },
     getTipInfo: function (page) {
       var tip = '';
+      if (page.description) {
+        return page.description;
+      }
       if (page.orderNo >= 1 && page.orderNo <= 3) {
         tip = '注：' + (page.title.length > 8 ? '该表' : page.title) + '好票不能超过 ' + page.groups[0].maxGood;
       } else if (page.orderNo == 4) {

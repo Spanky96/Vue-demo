@@ -5,16 +5,23 @@
     <!-- 选择题 1-5 评测表 START-->
     <div v-if="page.orderNo <= 5">
       <div class="description">({{page.description}})</div>
-      <!-- <div class="tips">请点击机关名称查看当年工作实绩</div> -->
+       <div class="tips" v-if="page.showTip">{{page.showTip}}</div>
       <div class="groups">
         <div class="group" v-for="(group, index) in page.groups" :key="index">
           <div class="group-name" v-if="page.groups.length > 1">{{group.name}}</div>
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order">
-              <div class="sub sub-name">{{item.order |NumFormat}}. <div class="itemname">{{item.leader}}</div><div class="leader">({{item.name}})</div></div>
+              <div class="sub sub-name"><span class="no">{{item.order | NumFormat}}. </span><div class="itemname" @click="showInfo(item)">{{item.name}}</div><div class="leader" v-if="item.remark">({{item.remark}})</div></div>
+            <template v-if="page.chooses">
+              <label v-for="(co, coid) in page.chooses"
+              :key="coid" @click="showTips(group, item, coid == 0)" class="item-label m60"><div class="sub sub-item">{{co.chooseTitle}}
+                <input type="radio" :name="item.id" class="radio-box" :value="co.chooseId" v-model="item.chooseStatus" :disabled="co.chooseId == '1' && (!editable || item.chooseStatus != '1' && checkMaxGood(group))" @change="itemChanged(item)" ></div></label>
+            </template>
+            <template v-else>
               <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">好<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label m60"><div class="sub sub-item">较好<input type="radio" :name="item.id" class="radio-box" value="2" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">一般<input type="radio" :name="item.id" class="radio-box" value="3" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
+            </template>
               <!-- <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不满意<input type="radio" :name="item.id" class="radio-box" value="4" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label>
               <label @click="showTips(group, item)" class="item-label"><div class="sub sub-item">不了解<input type="radio" :name="item.id" class="radio-box" value="5" v-model="item.chooseStatus" :disabled="!editable" @change="itemChanged(item)"></div></label> -->
             </div>
@@ -270,12 +277,13 @@ export default {
       }
       if (good && item.chooseStatus != '1' && this.checkMaxGood(group)) {
         var goodItems = group.items.filter(function (o) { return o.chooseStatus == '1'; });
-        var goodItemNames = goodItems.map(n => n.leader).join(',');
-        this.$emit('showAlert', {name: '提示', description: "好票不能超过" + group.maxGood + ',请适当考虑后投票。<br>当前好票已投给：' + goodItemNames, okText: '确认'});
+        var goodItemNames = goodItems.map(n => (n.name || n.leader)).join(',');
+        var goodName = this.page.chooses ? this.page.chooses[0].chooseTitle : '好票';
+        this.$emit('showAlert', {name: '提示', description: (`"${goodName}"数不能超过${group.maxGood},请适当考虑后投票。<br>当前`) + '已投给：' + goodItemNames, okText: '确认'});
       }
     },
     showInfo (item) {
-      this.$emit('showAlert', item);
+      item.description && this.$emit('showAlert', item);
     },
     addAdvice () {
       this.page.dwadvise.push({
