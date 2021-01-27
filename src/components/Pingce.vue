@@ -15,7 +15,12 @@
             <template v-if="page.chooses">
               <label v-for="(co, coid) in page.chooses"
               :key="coid" @click="showTips(group, item, coid == 0)" class="item-label m60"><div class="sub sub-item">{{co.chooseTitle}}
-                <input type="radio" :name="item.id" class="radio-box" :value="co.chooseId" v-model="item.chooseStatus" :disabled="co.chooseId == '1' && (!editable || item.chooseStatus != '1' && checkMaxGood(group))" @change="itemChanged(item)" ></div></label>
+                <input :type="page.chooses.length == 1 ? 'checkbox' : 'radio'" :name="item.id"
+                  class="radio-box" :value="co.chooseId" v-model="item.chooseStatus"
+                  :disabled="co.chooseId == '1' && (!editable || item.chooseStatus != '1' && checkMaxGood(group))"
+                  @change="itemChanged(item)" >
+                </div>
+              </label>
             </template>
             <template v-else>
               <label @click="showTips(group, item, true)" class="item-label"><div class="sub sub-item">好<input type="radio" :name="item.id" class="radio-box" :disabled="!editable || item.chooseStatus != '1' && checkMaxGood(group)" value="1" v-model="item.chooseStatus"  @change="itemChanged(item)"></div></label>

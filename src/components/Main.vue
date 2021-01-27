@@ -33,7 +33,7 @@
         </div>
       </div>
       <alert :title="alertObject.title" :content="alertObject.content" :ok-text='alertObject.okText' ref="alert"></alert>
-      <confirm :title="'确认'" :content="'是否确认提交?'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
+      <confirm :title="'确认'" :content="'是否确认提交?提交后不能更改。'" :ok-text="'提交'" :cancel-text="'取消'"  :on-ok="submit" ref="confirm"></confirm>
     </page>
   </div>
 </template>
@@ -52,6 +52,15 @@ export default {
   },
   data () {
     var pages = this.$db.getObject('pages');
+    pages.forEach(p => {
+      p.groups.forEach(g => {
+        g.items.forEach(n => {
+          if (n.chooseStatus == '0' && p.chooses.length == 1) {
+            n.chooseStatus = false;
+          }
+        });
+      });
+    });
     var tabs = this.$db.getObject('tabs');
     var active = this.$db.getObject('active');
     // 是否已保存
@@ -152,7 +161,7 @@ export default {
         for (var startIndex = parseInt(this.currentIndex); startIndex < pageId; startIndex++) {
           var page = this.pages[startIndex];
           var result = this.checkPage(page);
-          if (result) {
+          if (page.isAllCommit && result) {
             var description = '';
             if (startIndex == parseInt(this.currentIndex)) {
               description = '本页遗有待评项：' + (function () {
@@ -230,7 +239,7 @@ export default {
     },
     getUnchoosedItem () {
       for (var page of this.pages) {
-        if (page.orderNo >= 1 && page.orderNo <= 5) {
+        if (page.isAllCommit && page.orderNo >= 1 && page.orderNo <= 5) {
           for (var group of page.groups) {
             for (var item of group.items) {
               if (item.chooseStatus == '0') {
