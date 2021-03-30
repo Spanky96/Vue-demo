@@ -113,18 +113,11 @@ export default {
       if (vm.code) {
         // 验证code
         vm.$refs.preloader.open();
-        vm.$http.get('api/login/checkCode.jsp', {
-          params: {
-            code: vm.code,
-            password: '1111'
-          }}).then(function (res) {
+        vm.$http.get('api/mzpy/getList.jsp', {
+          params: {code: vm.code}}).then(function (res) {
           if (res.data.success) {
               vm.idConfirm = true;
-              vm.$db.set('memberId', res.data.memberId);
-              vm.$db.set('active', res.data.active);
-              vm.$db.set('personTypes', res.data.personTypes);
-              // vm.$router.push({path: '/index' + (res.data.personType ? ('/' + res.data.personType) : '')});
-              // 直接到告知页
+              vm.$db.set('mzpyData', res.data.data);
               vm.$router.push({path: '/gz'});
           } else {
             vm.$toast(res.data.msg);

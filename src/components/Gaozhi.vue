@@ -19,9 +19,10 @@ export default {
     'page-content': Content, Page
   },
   data () {
+    var mzpyData = this.$db.get('mzpyData');
     return {
-      activeName: this.$db.get('active').actName,
-      gaozhi: this.$db.get('active').gaozhi,
+      activeName: mzpyData.handler.batchName,
+      gaozhi: mzpyData.handler.content,
       // 数据加载完毕 1  加载失败 -1
       status: 0,
       tips: ''
@@ -29,79 +30,10 @@ export default {
   },
   methods: {
     startPc: function () {
-      if (this.status == 1) {
-        if (this.tips) {
-          this.$toast(this.tips);
-        }
-        this.$router.push({path: '/tp'});
-      } else if (this.status == 0) {
-        this.$toast('数据正在加载，请稍后');
-      } else if (this.status == -1) {
-        this.getPageList();
-        this.getCompanyList();
-      }
-    },
-    getPageList: function () {
-      var vm = this;
-      var actId = vm.$db.get('active').actId;
-      var url = 'api/forminfo/getFormInfo.jsp?actId=' + actId;
-      if (this.$db.get('memberId')) {
-        url += '&memberId=' + this.$db.get('memberId');
-      }
-      this.$http.get(url)
-        .then(function (res) {
-          if (res.data.success) {
-            vm.status = 1;
-            var pages = res.data.pages;
-            var zpbIndex = pages.findIndex(n => n.isZpb);
-            if (zpbIndex != -1) {
-              if (pages[zpbIndex].dwadvise.length == 0) {
-                pages[zpbIndex].dwadvise.push({danwei: '', advise: '', dwShow: false});
-              } else {
-                pages[zpbIndex].dwadvise.map(function (n) {
-                  n.danwei = n.dwName;
-                });
-              }
-            }
-
-            var zjdIndex = pages.findIndex(n => n.isZjd);
-            if (zjdIndex != -1) {
-              pages[zjdIndex].title = res.data.deptName + pages[zjdIndex].title;
-            }
-
-            vm.$db.set('pages', pages);
-            vm.$db.set('tabs', res.data.tabs);
-            vm.$db.set('editable', res.data.status != 'Y');
-            vm.$db.set('submitable', res.data.statusOn != 'Y');
-            vm.tips = res.data.tips;
-          } else {
-            vm.status = -1;
-            vm.$toast(res.data.msg);
-          }
-        }).catch(function (err) {
-          console.log(err);
-          vm.status = -1;
-          window.alert(err);
-        });
-    },
-    getCompanyList: function () {
-      var vm = this;
-      this.$http.get('api/dept/getDepts.jsp')
-        .then(function (res) {
-          if (res.data.success) {
-            vm.$db.set('companies', res.data.companies);
-          } else {
-            window.alert(res.data.msg);
-          }
-        }).catch(function (err) {
-          console.log(err);
-          window.alert(err);
-        });
+      this.$router.push({path: '/tp'});
     }
   },
   mounted () {
-    this.getPageList();
-    this.getCompanyList();
   }
 };
 </script>
@@ -146,6 +78,35 @@ export default {
       position: relative;
       top: 19px;
     }
+  }
+}
+.content /deep/ table {
+  width: 95% !important;
+  margin-left: 2.5%;
+  font-family: verdana,arial,sans-serif;
+  font-size:11px;
+  color:#333333;
+  border-width: 1px;
+  border-color: #666666;
+  border-collapse: collapse;
+  tr:first-child td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #ffeeee;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    width: 20%;
+  }
+  td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: transparent;
+    vertical-align: initial;
   }
 }
 </style>

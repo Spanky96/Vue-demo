@@ -161,7 +161,6 @@ ul.tabs {
   list-style: none;
   display: flex;
 }
-
 ul.tabs li a {
   cursor: pointer;
   position: relative;
@@ -180,6 +179,7 @@ ul.tabs li a {
   padding: 0 10px;
   font-size: 15px;
   transition: padding 0.2s ease, margin 0.2s ease;
+  overflow: hidden;
 }
 
 .tabs li:first-child a {

@@ -3,8 +3,8 @@
     <page style="background:#FBF4DA; overflow-x:hidden;overflow-y:scroll">
       <div id="main-bgtop" class="bgtop">
         <div class="title-box">
-          <div class="title">{{active.actName}}</div>
-          <div class="title title-stroke">{{active.actName}}</div>
+          <div class="title">{{active.batchName}}</div>
+          <div class="title title-stroke">{{active.batchName}}</div>
         </div>
         <div class="time">活动时间：{{active.dateStart}}至{{active.dateEnd}}</div><div id="test" style="display:none;width: 15px;height: 15px;background: #fff;" @click="yjpj()"></div>
       </div>
@@ -17,18 +17,29 @@
       <div class="wrap">
         <ul class="tabs group largeHide">
             <li v-for="(tab, index) in tabs" :key="index">
-              <a @click="changeView(index)" :class="{active: tab.active}" v-bind:style="[tab.style]">{{tab.active ? tab.title : tab.subTitle}}</a>
+              <a @click="changeView(index)" :class="{active: tab.active}" v-bind:style="[tab.style]">
+                <!-- {{tab.active ? tab.title : tab.subTitle}} -->
+                {{tab.title}}
+              </a>
             </li>
         </ul>
         <ul class="tabs group largeShow">
             <li v-for="(tab, index) in tabs" :key="index">
-              <a @click="changeView(index)" :class="{active: tab.active}">{{tab.easyTitle}}</a>
+              <a @click="changeView(index)" :class="{active: tab.active}">
+                <!-- {{tab.easyTitle}} -->
+                {{tab.title}}
+              </a>
             </li>
         </ul>
         <div id="content">
           <div id="fixtips">{{tipInfo}} {{getExtraTipInfo()}}</div>
           <scroll :enable-infinite="false" :enable-refresh="false" ref="scroll" id="pcPage">
-            <pingce v-for="(page, index) in pages" :key="index" v-show="currentIndex==index" :page="pages[index]" :editable="editable" :submitable="submitable" v-on:showAlert="showAlert" v-on:changeView="changeView2" v-on:itemChanged="itemChanged" :ref="'pingce'+page.orderNo"></pingce>
+            <pingce v-for="(page, index) in pages" :key="index"
+              v-show="currentIndex==index" :page="pages[index]"
+              :editable="editable" :submitable="submitable"
+              v-on:showAlert="showAlert" v-on:changeView="changeView2"
+              v-on:itemChanged="itemChanged" :ref="'pingce'+index">
+            </pingce>
           </scroll>
         </div>
       </div>
@@ -44,33 +55,30 @@ import Page from './weui/components/page/index';
 import { Footer, Item } from './weui/components/footer';
 import Scroll from './weui/components/scroll';
 import { Alert, Confirm } from './modal';
-import Pingce from './pingce';
+import Pingce from './pingce2';
 export default {
   name: 'Main',
   components: {
     'page-content': Content, Page, 'page-footer': Footer, 'footer-item': Item, Pingce, Scroll, Alert, Confirm
   },
   data () {
-    var pages = this.$db.getObject('pages');
-    pages.forEach(p => {
-      p.groups.forEach(g => {
-        g.items.forEach(n => {
-          if (n.chooseStatus == '0' && p.chooses.length == 1) {
-            n.chooseStatus = false;
-          }
-        });
-      });
+    var mzpyData = this.$db.get('mzpyData');
+    var pages = mzpyData.groups;
+
+    var tabs = mzpyData.groups.map((n, i) => {
+      return {
+        title: n.title,
+        active: !i
+      };
     });
-    var tabs = this.$db.getObject('tabs');
-    var active = this.$db.getObject('active');
+    var active = mzpyData.handler;
     // 是否已保存
-    var editable = this.$db.getObject('editable');
-    var submitable = this.$db.getObject('submitable');
-    if (!pages || !tabs) {
+    var editable = true;
+    var submitable = mzpyData.submitable;
+    window.app = this;
+    if (!pages) {
       this.$router.push({path: '/'});
     }
-    tabs.forEach(function (n) { n.active = false; });
-    tabs[0].active = true;
     this.changeStyle(tabs);
     var tipInfo = this.getTipInfo(pages[0]);
     return {
@@ -155,45 +163,33 @@ export default {
     },
     changeView (id, offset) {
       var pageId = offset ? (parseInt(this.currentIndex) + offset) : id;
-      if (this.editable && pageId > this.currentIndex) {
+      if (this.submitable && pageId > this.currentIndex) {
         // 检查有没有未填选项
         // 1 -> 2 检查 1  1->3 检查 1,2
         for (var startIndex = parseInt(this.currentIndex); startIndex < pageId; startIndex++) {
           var page = this.pages[startIndex];
-          var result = this.checkPage(page);
-          if (page.isAllCommit && result) {
-            var description = '';
-            if (startIndex == parseInt(this.currentIndex)) {
-              description = '本页遗有待评项：' + (function () {
-                var res = '';
-                if (result.page > 5) { // 总评表和街道评表
-                  return '总体评价';
-                } else if (result.page == 5) { // 有多组的
-                  var currentGroup = '';
-                  result.items.forEach(function (o) {
-                    if (o.group != currentGroup) {
-                      currentGroup = o.group;
-                      res += '<br>' + currentGroup + ':';
-                    }
-                    res += (o.item < 10 ? "0" + o.item : o.item) + ',';
-                  });
-                  return res;
-                } else {
-                  result.items.forEach(function (o) {
-                    res += (o.item < 10 ? "0" + o.item : o.item) + ',';
-                  });
-                  return res;
-                }
-              })() + '<br>请先给与测评再尝试此操作。';
-            } else {
-              description = '请先完成' + page.title + "再尝试此操作。";
-            }
+          if (page.error) {
             this.showAlert({
               name: '提示',
-              description: description,
+              description: page.error,
               okText: '关闭'
             });
             return;
+          } else {
+            var misItem = this.checkAllCommit(page);
+            if (misItem.length) {
+              var names = misItem.map(n => n.userName).join(',');
+              if (names.length > 20) {
+                names = names.slice(0, 20) + '...';
+              }
+              this.$refs['pingce' + this.currentIndex][0].$forceUpdate();
+              this.showAlert({
+                name: '提示',
+                description: '存在遗漏选项：' + names,
+                okText: '关闭'
+              });
+              return;
+            }
           }
         }
       }
@@ -205,13 +201,13 @@ export default {
       }
       if (pageId == this.pages.length) {
         if (!this.submitable) {
-          this.showAlert({name: '提示', description: '很抱歉,距您上次提交已超7日，无法提交。'});
-          return;
-        }
-        if (!this.editable) {
           this.showAlert({name: '提示', description: '您已提交，无法重复提交'});
           return;
         }
+        // if (!this.editable) {
+        //   this.showAlert({name: '提示', description: '您已提交，无法重复提交'});
+        //   return;
+        // }
         this.$refs.confirm.open();
         return;
       }
@@ -225,6 +221,19 @@ export default {
       this.changeStyle(this.tabs);
       document.getElementsByClassName('pull-down')[0].scrollTop = 0;
       document.getElementsByClassName('page')[0].scrollTop = document.getElementById('main-bgtop').scrollHeight;
+    },
+    checkAllCommit: function (page) {
+      var missItem = [];
+      page.users.forEach(group => {
+        return group.items.forEach(n => {
+          if (!n.value) {
+            n.type = 'error';
+            n.msg = '选项遗漏';
+            missItem.push(n);
+          }
+        });
+      });
+      return missItem;
     },
     changeView2: function (data) {
       this.changeView(data.id, data.offset);
@@ -286,20 +295,13 @@ export default {
       return resultCache;
     },
     yjpj: function () {
-      var resultCache = new Set();
-      this.pages.forEach(function (page) {
-        if (page.orderNo >= 1 && page.orderNo <= 5) {
-          page.groups.forEach(function (group) {
-            group.items.forEach(function (item) {
-              if (item.chooseStatus == '0') {
-                item.chooseStatus = Math.ceil(Math.random() * 5);
-                resultCache.add(item);
-              }
-            });
+      this.pages.forEach((page, index) => {
+        page.users.forEach(group => {
+          group.items.forEach(n => {
+            n.value = (Math.random() * 100).toFixed(1);
           });
-        }
+        });
       });
-      this.resultCache = resultCache;
     },
     submit: function () {
       var vm = this;
@@ -307,85 +309,38 @@ export default {
       if (!vm.submitable) {
         return;
       }
-      // 回调
-      var p1 = null;
-      var p2 = null;
-      var p3 = null;
-      // 提交
-      if (vm.editable) {
-        // 1 检查所有选择题 是否已选
-        var unchooseditem = vm.getUnchoosedItem();
-        if (unchooseditem) {
-          vm.showAlert({
-            name: '提示',
-            description: unchooseditem.page + ' 中存在未选择选项：' + unchooseditem.item + '。',
-            okText: '关闭'
-          });
-          return;
-        } else {
-          // 提交选择题
-          p1 = vm.saveResult(vm.resultCache, true);
-        }
-      }
-      // 3 提交主观题
-      if (vm.$refs.pingce8) {
-        if (p1) {
-          p2 = new Promise(function (resolve, reject) {
-            p1.then(function (data) {
-              console.log(data + "完成下面是06");
-              vm.$refs.pingce8[0].savePage06().then(function (data) {
-                resolve(data);
+      var mzpyData = this.$db.get('mzpyData');
+      var result = [];
+      this.pages.forEach((page, index) => {
+          page.users.forEach(group => {
+            group.items.forEach(n => {
+              result.push({
+                userId: n.userId,
+                score: n.value,
+                weight: n.weight
               });
             });
           });
-        } else {
-          p2 = vm.$refs.pingce8[0].savePage06();
-        }
-      }
-      if (vm.$refs.pingce6) {
-        if (p1) {
-          p2 = new Promise(function (resolve, reject) {
-            p1.then(function (data) {
-              console.log(data + "完成下面是06");
-              vm.$refs.pingce6[0].savePage06().then(function (data) {
-                resolve(data);
-              });
-            });
-          });
-        } else {
-          p2 = vm.$refs.pingce6[0].savePage06();
-        }
-      }
-
-      var p = p2 || p1;
-      if (p) {
-        p3 = new Promise(function (resolve, reject) {
-          if (vm.$refs.pingce7) {
-            p.then(function (data) {
-              console.log(data + "完成下面是总评表");
-              vm.$refs.pingce7[0].saveZpb().then(function (data) {
-                resolve(data);
-              });
-            });
-          } else {
-            p.then(function (data) {
-              resolve(data);
-            });
-          }
         });
-      } else {
-        p3 = vm.$refs.pingce7[0].saveZpb();
-      }
-
-      p3.then(function (data) {
-        console.log(data + "完成下面是最后操作");
-        // 4 不可修改
-        vm.editable = false;
-        vm.$db.set('editable', false);
-        vm.$db.set('pages', vm.pages);
-        vm.$db.set('tabs', vm.tabs);
-        // 5 跳转页面
-        vm.$router.push({path: '/bye'});
+      var data = {
+        userId: mzpyData.handler.userId,
+        batchId: mzpyData.handler.batchId,
+        result
+      };
+      var url = '/api/mzpy/saveScore.jsp';
+      vm.$http.post(url, data).then(function (res) {
+        if (res.data.success) {
+          mzpyData.submitable = false;
+          mzpyData.groups = vm.pages;
+          vm.submitable = false;
+          vm.$db.set('mzpyData', mzpyData);
+          // 5 跳转页面
+          vm.$router.push({path: '/bye'});
+        } else {
+          alert("保存失败");
+        }
+      }).catch(function (err) {
+        console.log(err);
       });
     },
     itemChanged (item) {
