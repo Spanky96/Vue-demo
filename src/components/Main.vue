@@ -306,7 +306,7 @@ export default {
     submit: function () {
       var vm = this;
       // 如果不能提交，直接return
-      if (!vm.submitable) {
+      if (!vm.submitable || vm.isPosting) {
         return;
       }
       var mzpyData = this.$db.get('mzpyData');
@@ -328,7 +328,9 @@ export default {
         result
       };
       var url = '/api/mzpy/saveScore.jsp';
+      vm.isPosting = true;
       vm.$http.post(url, data).then(function (res) {
+        vm.isPosting = false;
         if (res.data.success) {
           mzpyData.submitable = false;
           mzpyData.groups = vm.pages;
