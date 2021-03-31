@@ -113,7 +113,7 @@ export default {
       if (vm.code) {
         // 验证code
         vm.$refs.preloader.open();
-        vm.$http.get('api/mzpy/getList.jsp', {
+        vm.$http.get('api/getList.jsp', {
           params: {code: vm.code}}).then(function (res) {
           if (res.data.success) {
               vm.idConfirm = true;

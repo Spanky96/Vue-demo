@@ -327,7 +327,7 @@ export default {
         batchId: mzpyData.handler.batchId,
         result
       };
-      var url = '/api/mzpy/saveScore.jsp';
+      var url = '/api/saveScore.jsp';
       vm.isPosting = true;
       vm.$http.post(url, data).then(function (res) {
         vm.isPosting = false;
