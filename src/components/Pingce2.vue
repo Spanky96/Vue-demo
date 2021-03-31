@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import _ from 'lodash';
+// import _ from 'lodash';
 
 export default {
   name: 'Pingce2',
@@ -76,7 +76,7 @@ export default {
           if (parseInt(item.value) == parseFloat(item.value)) { // 整数自动取整
             item.value = parseInt(item.value);
           } else { // 小数割成1位
-            item.value = parseFloat(Math.floor(parseFloat(item.value) * 10) / 10);
+            item.value = parseFloat(Math.floor(parseFloat(item.value) * 100) / 100);
           }
           if (item.value > 100 || item.value < 0) {
             item.type = 'error';
@@ -105,6 +105,28 @@ export default {
       }
 
       // 规则1 90分以上不能超过40%
+      this.page.users.forEach(group => {
+        var totalPerson = group.items.length;
+        var maxNum = Math.floor(totalPerson * 0.4);
+        var count = 0;
+        group.items.forEach(item => {
+          item.msg.replace('评分重复', '');
+          if (item.type == 'number' && item.value >= 90) {
+            count++;
+          }
+        });
+        group.items.forEach(item => {
+          if (item.type == 'number' && item.value >= 90) {
+            item.msg = (count > maxNum) ? '90分以上不能超过40%;' : '';
+          }
+        });
+        if (count > maxNum) {
+          error = '90分以上超过40%';
+        }
+      });
+
+      // 规则1 90分以上不能超过40% 按page
+      /*
       var totalPerson = _.sum(this.page.users.map(n => n.items.length));
       var maxNum = Math.floor(totalPerson * 0.4);
       var count = 0;
@@ -126,6 +148,7 @@ export default {
       if (count > maxNum) {
         error = '90分以上超过40%';
       }
+      */
       // 规则2 所有人的分数不能重复
       var exitSame = false;
       this.page.users.forEach(groupI => {
