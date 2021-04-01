@@ -151,6 +151,7 @@ export default {
       */
       // 规则2 所有人的分数不能重复
       var exitSame = false;
+      /* // 按page
       this.page.users.forEach(groupI => {
         groupI.items.forEach(itemI => {
           this.page.users.forEach(groupJ => {
@@ -163,6 +164,22 @@ export default {
                 }
               }
             });
+          });
+        });
+      });
+      */
+      // 按组
+
+      this.page.users.forEach(group => {
+        group.items.forEach(itemI => {
+          group.items.forEach(itemJ => {
+              if (itemI != itemJ && itemI.type == 'number' && itemJ.type == 'number') {
+                if (itemI.value == itemJ.value) {
+                  exitSame = true;
+                  !itemI.msg.includes('评分重复') && (itemI.msg += '评分重复');
+                  !itemJ.msg.includes('评分重复') && (itemJ.msg += '评分重复');
+                }
+              }
           });
         });
       });
