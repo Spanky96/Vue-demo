@@ -8,7 +8,7 @@
       <div class="tips" v-if="page.showTip">{{page.showTip}}</div>
       <div class="groups">
         <div class="group" v-for="(group, index) in page.users" :key="index">
-          <div class="group-name">{{group.groupName}} <span style="color:#001eff;"> (90分以上不超过{{Math.floor(group.items.length * 0.4)}}人)</span> </div>
+          <div class="group-name">{{group.groupName}} <span style="color:#001eff;"> (90分及以上不超过{{Math.floor(group.items.length * 0.4)}}人)</span> </div>
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order" :class="item.type">
               <div class="sub sub-name"><span class="no">{{item.orderNo | NumFormat}}. </span>
@@ -104,7 +104,7 @@ export default {
         error = '存在无效值';
       }
 
-      // 规则1 90分以上不能超过40%
+      // 规则1 90分及以上不能超过40%
       this.page.users.forEach(group => {
         var totalPerson = group.items.length;
         var maxNum = Math.floor(totalPerson * 0.4);
@@ -118,15 +118,15 @@ export default {
         var maxLength = Math.floor(group.items.length * 0.4);
         group.items.forEach(item => {
           if (item.type == 'number' && item.value >= 90) {
-            item.msg = (count > maxNum) ? `90分以上不超过${maxLength}人;` : '';
+            item.msg = (count > maxNum) ? `90分及以上不超过${maxLength}人;` : '';
           }
         });
         if (count > maxNum) {
-          error = '90分以上超过40%';
+          error = '90分及以上不超过40%';
         }
       });
 
-      // 规则1 90分以上不能超过40% 按page
+      // 规则1 90分及以上不能超过40% 按page
       /*
       var totalPerson = _.sum(this.page.users.map(n => n.items.length));
       var maxNum = Math.floor(totalPerson * 0.4);
@@ -142,12 +142,12 @@ export default {
       this.page.users.forEach(group => {
         group.items.forEach(item => {
           if (item.type == 'number' && item.value >= 90) {
-            item.msg = (count > maxNum) ? '90分以上不能超过40%;' : '';
+            item.msg = (count > maxNum) ? '90分及以上不能超过40%;' : '';
           }
         });
       });
       if (count > maxNum) {
-        error = '90分以上超过40%';
+        error = '90分及以上超过40%';
       }
       */
       // 规则2 所有人的分数不能重复
