@@ -470,7 +470,7 @@ export default {
   }
 }
 #pcPage {
-  top: 22px;
+  // top: 22px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
