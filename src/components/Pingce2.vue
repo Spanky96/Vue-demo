@@ -8,7 +8,7 @@
       <div class="tips" v-if="page.showTip">{{page.showTip}}</div>
       <div class="groups">
         <div class="group" v-for="(group, index) in page.users" :key="index">
-          <div class="group-name">{{group.groupName}} ({{group.items.length}}人)</div>
+          <div class="group-name">{{group.groupName}} <span style="color:#001eff;"> ({{Math.floor(group.items.length * 0.4)}})</span> </div>
           <div class="items">
             <div class="item" v-for="(item, order) in group.items" :key="order" :class="item.type">
               <div class="sub sub-name"><span class="no">{{item.orderNo | NumFormat}}. </span>
