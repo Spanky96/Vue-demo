@@ -501,4 +501,8 @@ export default {
   text-align: center;
   font-size: 12px;
 }
+.modal-text {
+  text-align: left;
+  text-indent: 2rem;
+}
 </style>
