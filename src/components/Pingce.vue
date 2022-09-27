@@ -1,7 +1,7 @@
 <template>
   <div id="pc-page">
     <div class="h1">{{page.title}}</div>
-    <div class="class-name">{{page.className}}{{getItemNumber(page)}}</div>
+    <div class="class-name">{{page.className}} <span style="display:none;">{{getItemNumber(page)}}</span></div>
     <!-- 选择题 1-5 评测表 START-->
     <div v-if="page.orderNo <= 5">
       <div class="description">({{page.description}})</div>
