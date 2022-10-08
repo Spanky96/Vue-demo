@@ -105,6 +105,7 @@ export default {
       }
 
       // 规则1 90分及以上不能超过40%
+
       this.page.users.forEach(group => {
         var maxNum = group.maxGood;
         var count = 0;
@@ -112,6 +113,7 @@ export default {
           item.msg.replace('评分重复', '');
           if (item.type == 'number' && item.value >= 90) {
             count++;
+            count2++;
           }
         });
 
@@ -125,6 +127,27 @@ export default {
         }
       });
 
+      // 整页再判断一次
+      var pageMaxGood = this.page.maxGood || 9999;
+      var count2 = 0;
+      this.page.users.forEach(group => {
+        group.items.forEach(item => {
+          item.msg.replace('评分重复', '');
+          if (item.type == 'number' && item.value >= 90) {
+            count2++;
+          }
+        });
+      });
+      this.page.users.forEach(group => {
+        group.items.forEach(item => {
+          if (item.type == 'number' && item.value >= 90) {
+            item.msg = (count2 > pageMaxGood) ? `90分及以上不超过${pageMaxGood}人;` : '';
+          }
+        });
+      });
+      if (count2 > pageMaxGood) {
+        error = `90分及以上不超过${pageMaxGood}人;`;
+      }
       // 规则1 90分及以上不能超过40% 按page
       /*
       var totalPerson = _.sum(this.page.users.map(n => n.items.length));
