@@ -3,12 +3,20 @@
     <page style="background:#FBF4DA">
       <div class="bgtop"></div>
       <div id="validate">
-        <div class="text">{{idConfirm ? '验证成功' : '请填写邀请码'}}</div>
+        <div class="dd">
+          账号:
+          <input type="text" placeholder="请输入账号" v-model='username'>
+        </div>
+          <div class="dd">
+            密码:
+          <input type="password" placeholder="请输入密码" v-model='password'>
+        </div>
+       <!--  <div class="text">{{idConfirm ? '验证成功' : '请填写邀请码'}}</div>
         <div class="validate-code">
           <div class="codebox">
             <input type="number" pattern="[0-9]*" id="code" class="code" :disabled="idConfirm" v-model="code" @keyup.enter="validateCode()">
           </div>
-        </div>
+        </div> -->
         <!-- <div class="pin">
           <div class="text">设置或输入4位数密码</div>
           <div class="validate-code">
@@ -43,11 +51,15 @@ export default {
     var code = '';
     var pin = [];
     var pwShow = false;
+    var password = '';
+    var username = '';
     return {
       idConfirm: idConfirm,
       code: code,
       pin: pin,
-      pwShow: pwShow
+      pwShow: pwShow,
+      username:username,
+      password:password,
     };
   },
   methods: {
@@ -110,11 +122,17 @@ export default {
       //   vm.pin = [];
       //   return;
       // }
-      if (vm.code) {
-        // 验证code
-        vm.$refs.preloader.open();
+         if(!vm.username){
+         vm.$toast('请输入账号');
+         return
+      }
+      if(!vm.password){
+         vm.$toast('请输入密码');
+         return
+      }
+           vm.$refs.preloader.open();
         vm.$http.get('api/getList.jsp', {
-          params: {code: vm.code}}).then(function (res) {
+          params: {username: vm.username,password: vm.password}}).then(function (res) {
           if (res.data.success) {
               vm.idConfirm = true;
               vm.$db.set('mzpyData', res.data.data);
@@ -135,9 +153,34 @@ export default {
           vm.$toast('数据访问失败');
           vm.$refs.preloader.close();
         });
-      } else {
-        vm.$toast('请输入邀请码');
-      }
+      // if (vm.code) {
+      //   // 验证code
+      //   vm.$refs.preloader.open();
+      //   vm.$http.get('api/getList.jsp', {
+      //     params: {code: vm.code}}).then(function (res) {
+      //     if (res.data.success) {
+      //         vm.idConfirm = true;
+      //         vm.$db.set('mzpyData', res.data.data);
+      //         vm.$router.push({path: '/gz'});
+      //     } else {
+      //       vm.$toast(res.data.msg);
+      //       if (res.data.msg.includes('邀请码')) {
+      //         vm.code = '';
+      //         vm.pin = [];
+      //       }
+      //       if (res.data.msg.includes('密码')) {
+      //         vm.pin = [];
+      //       }
+      //     }
+      //     vm.$refs.preloader.close();
+      //   }).catch(function (err) {
+      //     console.log(err);
+      //     vm.$toast('数据访问失败');
+      //     vm.$refs.preloader.close();
+      //   });
+      // } else {
+      //   vm.$toast('请输入邀请码');
+      // }
     }
   },
   mounted () {
@@ -245,6 +288,14 @@ export default {
           -webkit-text-security: unset;
         }
       }
+    }
+  }
+  .dd{
+    text-align: center;
+    margin-bottom: 20px;
+    input{
+      height: 40px;
+      line-height: 40px;
     }
   }
 </style>

@@ -76,7 +76,7 @@ export default {
           if (parseInt(item.value) == parseFloat(item.value)) { // 整数自动取整
             item.value = parseInt(item.value);
           } else { // 小数割成1位
-            item.value = parseFloat(Math.floor(parseFloat(item.value) * 100) / 100);
+            item.value = parseFloat(Math.floor(parseFloat(item.value) * 10) / 10);
           }
           if (item.value > 100 || item.value < 0) {
             item.type = 'error';
