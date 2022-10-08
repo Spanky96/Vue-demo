@@ -7,11 +7,11 @@
           账号:
           <input type="text" placeholder="请输入账号" v-model='username'>
         </div>
-          <div class="dd">
-            密码:
+        <div class="dd">
+          密码:
           <input type="password" placeholder="请输入密码" v-model='password'>
         </div>
-       <!--  <div class="text">{{idConfirm ? '验证成功' : '请填写邀请码'}}</div>
+        <!--  <div class="text">{{idConfirm ? '验证成功' : '请填写邀请码'}}</div>
         <div class="validate-code">
           <div class="codebox">
             <input type="number" pattern="[0-9]*" id="code" class="code" :disabled="idConfirm" v-model="code" @keyup.enter="validateCode()">
@@ -38,105 +38,113 @@
 </template>
 
 <script>
-import Content from './weui/components/content';
-import Page from './weui/components/page/index';
-import Preloader from './weui/components/preloader/index';
-export default {
-  name: 'Validate',
-  components: {
-    'page-content': Content, Page, Preloader
-  },
-  data () {
-    var idConfirm = false;
-    var code = '';
-    var pin = [];
-    var pwShow = false;
-    var password = '';
-    var username = '';
-    return {
-      idConfirm: idConfirm,
-      code: code,
-      pin: pin,
-      pwShow: pwShow,
-      username:username,
-      password:password,
-    };
-  },
-  methods: {
-    goNextInput: function (el) {
-      var vm = this;
-      var txts = document.querySelectorAll(el);
-      for (var i = 0; i < txts.length; i++) {
-        var t = txts[i];
-        t.index = i;
-        t.onkeyup = function (event) {
-          if (parseInt(this.value) >= 0 && this.value <= 9) {
-            var next = this.index + 1;
-            if (this.value.length > 1) {
+  import Content from './weui/components/content';
+  import Page from './weui/components/page/index';
+  import Preloader from './weui/components/preloader/index';
+  export default {
+    name: 'Validate',
+    components: {
+      'page-content': Content,
+      Page,
+      Preloader
+    },
+    data () {
+      var idConfirm = false;
+      var code = '';
+      var pin = [];
+      var pwShow = false;
+      var password = '';
+      var username = '';
+      return {
+        idConfirm: idConfirm,
+        code: code,
+        pin: pin,
+        pwShow: pwShow,
+        username: username,
+        password: password
+      };
+    },
+    methods: {
+      goNextInput: function (el) {
+        var vm = this;
+        var txts = document.querySelectorAll(el);
+        for (var i = 0; i < txts.length; i++) {
+          var t = txts[i];
+          t.index = i;
+          t.onkeyup = function (event) {
+            if (parseInt(this.value) >= 0 && this.value <= 9) {
+              var next = this.index + 1;
+              if (this.value.length > 1) {
+                this.value = this.value % 10;
+                vm.pin[this.index] = this.value % 10;
+              }
+              if (next > txts.length - 1) return;
+              if (this.value) {
+                txts[next].focus();
+              }
+            } else if (this.value > 9) {
               this.value = this.value % 10;
               vm.pin[this.index] = this.value % 10;
+            } else {
+              this.value = '';
+              vm.pin[this.index] = '';
             }
-            if (next > txts.length - 1) return;
-            if (this.value) {
-              txts[next].focus();
+          };
+          t.onkeydown = function (event) {
+            if (event.keyCode == 8 && !this.value) {
+              var prev = this.index - 1;
+              if (prev == -1) return;
+              txts[prev].value = '';
+              vm.pin[prev] = '';
+              txts[prev].focus();
             }
-          } else if (this.value > 9) {
-            this.value = this.value % 10;
-            vm.pin[this.index] = this.value % 10;
-          } else {
-            this.value = '';
-            vm.pin[this.index] = '';
-          }
-        };
-        t.onkeydown = function (event) {
-          if (event.keyCode == 8 && !this.value) {
-            var prev = this.index - 1;
-            if (prev == -1) return;
-            txts[prev].value = '';
-            vm.pin[prev] = '';
-            txts[prev].focus();
-          }
-        };
-        t.onfocus = function () {
-          this.select();
-        };
-      }
-    },
-    checkPassword: function (pin) {
-      var result = '';
-      for (var i = 0; i < 4; i++) {
-        var elm = pin[i];
-        if (parseInt(elm) >= 0 && elm <= 9) {
-          result += elm;
-        } else {
-          return false;
+          };
+          t.onfocus = function () {
+            this.select();
+          };
         }
-      }
-      return result;
-    },
-    validateCode: function () {
-      var vm = this;
-      // var password = this.checkPassword(vm.pin);
-      // if (!password) {
-      //   vm.$toast("密码不符合要求，请重新输入。");
-      //   vm.pin = [];
-      //   return;
-      // }
-         if(!vm.username){
-         vm.$toast('请输入账号');
-         return
-      }
-      if(!vm.password){
-         vm.$toast('请输入密码');
-         return
-      }
-           vm.$refs.preloader.open();
+      },
+      checkPassword: function (pin) {
+        var result = '';
+        for (var i = 0; i < 4; i++) {
+          var elm = pin[i];
+          if (parseInt(elm) >= 0 && elm <= 9) {
+            result += elm;
+          } else {
+            return false;
+          }
+        }
+        return result;
+      },
+      validateCode: function () {
+        var vm = this;
+        // var password = this.checkPassword(vm.pin);
+        // if (!password) {
+        //   vm.$toast("密码不符合要求，请重新输入。");
+        //   vm.pin = [];
+        //   return;
+        // }
+        if (!vm.username) {
+          vm.$toast('请输入账号');
+          return;
+        }
+        if (!vm.password) {
+          vm.$toast('请输入密码');
+          return;
+        }
+        vm.$refs.preloader.open();
         vm.$http.get('api/getList.jsp', {
-          params: {username: vm.username,password: vm.password}}).then(function (res) {
+          params: {
+            username: vm.username,
+            password: vm.password
+          }
+        }).then(function (res) {
           if (res.data.success) {
-              vm.idConfirm = true;
-              vm.$db.set('mzpyData', res.data.data);
-              vm.$router.push({path: '/gz'});
+            vm.idConfirm = true;
+            vm.$db.set('mzpyData', res.data.data);
+            vm.$router.push({
+              path: '/gz'
+            });
           } else {
             vm.$toast(res.data.msg);
             if (res.data.msg.includes('邀请码')) {
@@ -153,61 +161,68 @@ export default {
           vm.$toast('数据访问失败');
           vm.$refs.preloader.close();
         });
-      // if (vm.code) {
-      //   // 验证code
-      //   vm.$refs.preloader.open();
-      //   vm.$http.get('api/getList.jsp', {
-      //     params: {code: vm.code}}).then(function (res) {
-      //     if (res.data.success) {
-      //         vm.idConfirm = true;
-      //         vm.$db.set('mzpyData', res.data.data);
-      //         vm.$router.push({path: '/gz'});
-      //     } else {
-      //       vm.$toast(res.data.msg);
-      //       if (res.data.msg.includes('邀请码')) {
-      //         vm.code = '';
-      //         vm.pin = [];
-      //       }
-      //       if (res.data.msg.includes('密码')) {
-      //         vm.pin = [];
-      //       }
-      //     }
-      //     vm.$refs.preloader.close();
-      //   }).catch(function (err) {
-      //     console.log(err);
-      //     vm.$toast('数据访问失败');
-      //     vm.$refs.preloader.close();
-      //   });
-      // } else {
-      //   vm.$toast('请输入邀请码');
-      // }
+        // if (vm.code) {
+        //   // 验证code
+        //   vm.$refs.preloader.open();
+        //   vm.$http.get('api/getList.jsp', {
+        //     params: {code: vm.code}}).then(function (res) {
+        //     if (res.data.success) {
+        //         vm.idConfirm = true;
+        //         vm.$db.set('mzpyData', res.data.data);
+        //         vm.$router.push({path: '/gz'});
+        //     } else {
+        //       vm.$toast(res.data.msg);
+        //       if (res.data.msg.includes('邀请码')) {
+        //         vm.code = '';
+        //         vm.pin = [];
+        //       }
+        //       if (res.data.msg.includes('密码')) {
+        //         vm.pin = [];
+        //       }
+        //     }
+        //     vm.$refs.preloader.close();
+        //   }).catch(function (err) {
+        //     console.log(err);
+        //     vm.$toast('数据访问失败');
+        //     vm.$refs.preloader.close();
+        //   });
+        // } else {
+        //   vm.$toast('请输入邀请码');
+        // }
+      }
+    },
+    mounted () {
+      this.goNextInput('.code-num');
     }
-  },
-  mounted () {
-    this.goNextInput('.code-num');
-  }
-};
+  };
+
 </script>
 <style lang="scss">
   #validate {
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
+      -webkit-appearance: none;
     }
+
     margin-top: 16vh;
+
     .text {
       text-align: center;
       padding: 1.5vh 0 1vh;
       font-size: 1rem;
     }
+
     .validate-code {
       margin: auto;
       width: 200px;
       height: 32px;
     }
+
     .codebox {
-        position: absolute;
-        height: 32px;
+      position: absolute;
+      height: 32px;
+
       .code {
         background-color: #ffffff6e;
         border: 1px solid;
@@ -216,6 +231,7 @@ export default {
         text-indent: 1em;
         font-size: 16px;
       }
+
       .inner-btn {
         position: relative;
         left: 174px;
@@ -224,15 +240,18 @@ export default {
         width: 20px;
         height: 20px;
       }
+
       .input {
         background: url('../images/mzpc/input.png') no-repeat;
         background-size: 100% 100%;
       }
+
       .active {
         background: url('../images/mzpc/active2.png') no-repeat;
         background-size: 100% 100%;
       }
     }
+
     .btn {
       background: url('../images/mzpc/button2.png') no-repeat;
       width: 170px;
@@ -250,6 +269,7 @@ export default {
       right: 0;
       bottom: 16vh;
     }
+
     .tip {
       position: fixed;
       bottom: 0;
@@ -257,12 +277,15 @@ export default {
       font-size: 12px;
     }
   }
+
   .pin {
     margin-top: 35px;
+
     .box {
       display: flex;
       justify-content: space-between;
       position: relative;
+
       input {
         background-color: #ffffff6e !important;
         border: 1px solid !important;
@@ -272,6 +295,7 @@ export default {
         font-size: 16px;
         -webkit-text-security: disc;
       }
+
       .toggle {
         width: 16px;
         height: 16px;
@@ -280,22 +304,27 @@ export default {
         right: -35px;
         top: 6px;
       }
+
       &.showPw {
         .toggle {
           background: url('../images/mzpc/zy.png') no-repeat;
         }
+
         input {
           -webkit-text-security: unset;
         }
       }
     }
   }
-  .dd{
+
+  .dd {
     text-align: center;
     margin-bottom: 20px;
-    input{
+
+    input {
       height: 40px;
       line-height: 40px;
     }
   }
+
 </style>
